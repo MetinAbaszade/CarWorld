@@ -10,18 +10,17 @@ import Posts from "../pages/posts/Posts";
 import PostNotFound from "../pages/posts/PostNotFound";
 import AuthLayout from "../pages/Auth/AuthLayout";
 import Login from "../pages/Auth/Login/Login";
+import Register from "../pages/Auth/Register/Register";
 import PrivateRoute from "./PrivateRoute";
-import { FetchData } from "./FetchData";
 
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
-            <Route path="/fetch-data" element={<FetchData />} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path="/posts" element={<PostsLayout />}>
+            <Route path="/posts" element={<PrivateRoute><PostsLayout /></PrivateRoute>}>
                 <Route index={true} element={<Posts />} />
                 <Route path="/posts/:url/:id" element={<Post />} />
                 <Route path="*" element={<PostNotFound />} />
@@ -29,6 +28,7 @@ const AppRoutes = () => {
 
             <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
             </Route>
 
             <Route path="*" element={<Page404 />} />

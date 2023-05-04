@@ -7,9 +7,12 @@ using AspReactTestApp.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using MimeKit;
 
 namespace AspReactTestApp.Services.AuthService
 {
@@ -19,8 +22,8 @@ namespace AspReactTestApp.Services.AuthService
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IUserDal userDal, 
-                           IConfiguration configuration, 
+        public AuthService(IUserDal userDal,
+                           IConfiguration configuration,
                            IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
@@ -181,6 +184,26 @@ namespace AspReactTestApp.Services.AuthService
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
                 // SequenceEqual vs Equals
+            }
+        }
+
+
+        private string GenerateVerificationCode()
+        {
+            var random = new Random();
+            return random.Next(100000, 1000000).ToString();
+        }
+
+        public bool SendVerificationCode(string recipientemail)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw;
             }
         }
     }

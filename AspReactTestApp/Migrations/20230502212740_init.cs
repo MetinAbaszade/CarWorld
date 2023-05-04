@@ -20,8 +20,8 @@ namespace AspReactTestApp.Migrations
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TokenCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TokenExpires = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

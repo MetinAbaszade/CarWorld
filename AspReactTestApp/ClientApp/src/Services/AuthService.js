@@ -46,12 +46,11 @@ export async function CheckUserExists(userName) {
         });
         console.log(response)
 
-        if (response.n) {
-            console.log(`Error occured while searching for user with appropriate username: ${response.statusText}`);
-        }
-
-
+        if (response.ok) 
+            return true;
+        return false;
     }
+    
     catch (error) {
         console.log("Error occured while searching for user with appropriate username: " + error.message);
     }

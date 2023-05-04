@@ -9,8 +9,7 @@ export default function Login() {
   const errorLabel = useRef();
   const spinner = useRef();
   const alert = useRef();
-  const bars = useRef();
-  const strengthDiv = useRef();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -25,89 +24,31 @@ export default function Login() {
     };
   }, []);
 
-  const LoginHandle = async (e) => {
+  const SignInHandle = async (e) => {
     e.preventDefault();
+    
     let userName = nameInput.current.value;
     let password = passwordInput.current.value;
 
     let authResponse = await AuthService.Login(userName, password);
-    console.log(authResponse);
 
     if (authResponse.isSuccessfull) {
       CookieService.setCookie("refreshtoken", authResponse.refreshToken);
       CookieService.setCookie("accesstoken", authResponse.token);
+
       let refreshtoken = CookieService.getCookie("refreshtoken");
       let accesstoken = CookieService.getCookie("accesstoken");
       console.log("accesstoken: " + accesstoken);
       console.log("refreshtoken: " + refreshtoken);
+
+     
+      navigate("/Profile");
     }
     else {
       console.log(errorLabel);
       errorLabel.current.innerHTML = "Email or Password is wrong";
     }
   };
-
-
-  //#region strengthbar
-
-  const strength = {
-    1: "weak",
-    2: "medium",
-    3: "strong",
-  };
-
-  const getIndicator = (password, strengthValue) => {
-    for (let index = 0; index < password.length; index++) {
-      let char = password.charCodeAt(index);
-      if (!strengthValue.upper && char >= 65 && char <= 90) {
-        strengthValue.upper = true;
-      } else if (!strengthValue.numbers && char >= 48 && char <= 57) {
-        strengthValue.numbers = true;
-      } else if (!strengthValue.lower && char >= 97 && char <= 122) {
-        strengthValue.lower = true;
-      }
-    }
-
-    let strengthIndicator = 0;
-
-    for (let metric in strengthValue) {
-      if (strengthValue[metric] === true) {
-        strengthIndicator++;
-      }
-    }
-
-    return strength[strengthIndicator] ?? "";
-  };
-
-  const getStrength = (password) => {
-    let strengthValue = {
-      upper: false,
-      numbers: false,
-      lower: false,
-    };
-
-    return getIndicator(password, strengthValue);
-  };
-
-  const handlePasswordChange = () => {
-    let password = passwordInput.current.value;
-
-    console.log(passwordInput.current.value);
-
-    const strengthText = getStrength(password);
-
-    bars.current.classList = "";
-
-    if (strengthText) {
-      strengthDiv.current.innerHTML = `${strengthText} Password`;
-      bars.current.classList.add(strengthText);
-    } else {
-      strengthDiv.current.innerHTML = "";
-    }
-  };
-
-  //#endregion
-
 
   //#region Spinner
   
@@ -133,7 +74,7 @@ export default function Login() {
     };
   };
 
-  const handleChange = debounce((input) => {
+  const handleUsernameChange = debounce((input) => {
     const { value } = input.target;
     updateUi(value);
   }, 500);
@@ -152,7 +93,7 @@ export default function Login() {
           <img
             src="https://pub-static.fotor.com/assets/projects/pages/5ff61721271e45d2b9bbc6dbbd4b14c7/300w/purple-cute-school-girl-78a8ba2c107c4ce1bb7e5a3de0ed9528.jpg"
           />
-          <form className="login-form" onSubmit={LoginHandle}>
+          <form className="login-form" onSubmit={SignInHandle}>
             <div className="username">
               <input
                 spellCheck="false"
@@ -160,7 +101,7 @@ export default function Login() {
                 ref={nameInput}
                 type="text"
                 placeholder="Username"
-                onKeyUp={handleChange}
+                onKeyUp={handleUsernameChange }
                 onKeyDown={handleStartTyping}
               />
               <div ref={spinner} className="spinner"></div>
@@ -172,14 +113,9 @@ export default function Login() {
               ref={passwordInput}
               type="password"
               placeholder="Password"
-              onKeyUp={handlePasswordChange}
             />
-            <div ref={bars} id="bars">
-              <div></div>
-            </div>
-            <div className="strength" ref={strengthDiv} id="strength"></div>
-            <button className="control" type="button">JOIN NOW</button>
-            <button className="control" type="button">LOGIN</button>
+            <button className="control" type="button" onClick={() => { navigate('/auth/register') }}>JOIN NOW</button>
+            <button className="control" type="button">Sign In</button>
           </form>
         </div>
       </div>

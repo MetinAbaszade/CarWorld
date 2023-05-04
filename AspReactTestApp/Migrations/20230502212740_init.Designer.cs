@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspReactTestApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230410075658_init")]
+    [Migration("20230502212740_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -20,12 +20,12 @@ namespace AspReactTestApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("JwtTokenWebApi.Entities.User", b =>
+            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,8 +45,9 @@ namespace AspReactTestApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TokenCreated")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TokenExpires")
                         .HasColumnType("datetime2");
