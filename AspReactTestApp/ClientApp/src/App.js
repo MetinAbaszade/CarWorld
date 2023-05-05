@@ -9,9 +9,10 @@ export default class App extends Component {
 
     render() {
         return (
-            <Layout>
-                <AppRoutes />
-            </Layout>
+            // <Layout>
+            //     <AppRoutes />
+            // </Layout>
+            <Register></Register>
         );
     }
 }

@@ -26,7 +26,7 @@ const AppRoutes = () => {
                 <Route path="*" element={<PostNotFound />} />
             </Route>
 
-            <Route path="/auth" element={<AuthLayout />}>
+            <Route path="/auth">
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
             </Route>

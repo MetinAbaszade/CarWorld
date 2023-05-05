@@ -5,8 +5,8 @@ namespace AspReactTestApp.Services.AuthService
 {
     public interface IAuthSevice
     {
-        public Task<User> RegisterUser(UserDto request);
-        public Task<AuthResponseDto> LoginUser(UserDto request);
+        public Task<AuthResponseDto> LoginUser(LoginUserDto request);
+        public Task<AuthResponseDto> RegisterUser(RegisterUserDto request);
         public Task<AuthResponseDto> RefreshToken();
         public bool SendVerificationCode(string email);
     }

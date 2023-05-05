@@ -31,7 +31,7 @@ namespace AspReactTestApp.Services.AuthService
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<AuthResponseDto> LoginUser(UserDto request)
+        public async Task<AuthResponseDto> LoginUser(LoginUserDto request)
         {
             var Users = await _userDal.GetList();
             var user = Users.FirstOrDefault(u => u.UserName == request.UserName);
@@ -59,20 +59,27 @@ namespace AspReactTestApp.Services.AuthService
             };
         }
 
-        public async Task<User> RegisterUser(UserDto request)
+        public async Task<AuthResponseDto> RegisterUser(RegisterUserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             var user = new User()
             {
+                Name = request.Name,
+                Surname = request.Surname,
                 UserName = request.UserName,
+                ProfileImageUrl = request.ProfileImageUrl,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                Role = "User"
             };
 
             await _userDal.Add(user);
 
-            return user;
+            return new AuthResponseDto()
+            {
+                IsSuccessfull = true
+            };
         }
 
         private string CreateToken(User user)

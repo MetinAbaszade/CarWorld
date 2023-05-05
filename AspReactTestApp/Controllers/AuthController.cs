@@ -21,15 +21,9 @@ namespace AspReactTestApp.Controllers
             _userService = userService;
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> RegisterUser(UserDto request)
-        {
-            var user = await _authSevice.RegisterUser(request);
-            return Ok(user);
-        }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDto>> Login(UserDto request)
+        public async Task<ActionResult<AuthResponseDto>> Login(LoginUserDto request)
         {
             var response = await _authSevice.LoginUser(request);
             if (response.IsSuccessfull)
@@ -38,8 +32,15 @@ namespace AspReactTestApp.Controllers
             return NotFound(response);
         }
 
+        [HttpPost("register")]
+        public async Task<ActionResult<AuthResponseDto>> RegisterUser(RegisterUserDto request)
+        {
+            var user = await _authSevice.RegisterUser(request);
+            return Ok(user);
+        }
+
         [HttpPost("checkuserexists")]
-        public async Task<ActionResult<bool>> CheckUserExists(UserDto request)
+        public async Task<ActionResult<bool>> CheckUserExists(LoginUserDto request)
         {
             var result = await _userService.CheckUserExists(request.UserName);
             if (result)

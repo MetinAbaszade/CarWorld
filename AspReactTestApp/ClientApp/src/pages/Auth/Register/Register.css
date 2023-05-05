@@ -25,94 +25,97 @@ body,
   }
 }
 
-body {
-  display: grid;
-  place-items: center;
-  margin: 0;
-  background-color: #000000;
-  background-image: url("bbblurry.svg");
-  background-repeat: no-repeat;
-  background-size: 200vh;
-  font-family: "Euclid Circular A";
-  color: #3a334e;
-  animation: rotate 5s infinite alternate linear;
-}
-
 .root {
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-left: 135%; /* Add some padding to keep the login-card away from the edge */
+  margin-left: 135%;
+  /* Add some padding to keep the login-card away from the edge */
 }
 
-button {
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  margin-top: 25px !important;
-}
 
-.control {
-  border: 0;
-  border-radius: 8px;
-  outline: none;
-  width: 100%;
-  height: 56px;
-  padding: 0 16px;
-  background: transparent;
-  border-radius: 6px;
-  border: 2px solid black;
-  color: black;
-  margin: 4px 0;
-  font-family: inherit;
-  text-align: left;
-  font-size: 20px;
-  transition: 0.4s;
-}
 
-.login-form input.control::placeholder {
-  color: black;
-  font-weight: bold;
-}
 
-.swiper {
-  width: 100%;
-} 
+
+body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background-color: black;
+  color: #222;
+  background-repeat: no-repeat;
+  background-size: 200vh;
+  font-family: "Euclid Circular A";
+  animation: rotate 5s infinite alternate linear;
+}
 
 .login-container {
+  height: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: end;
   align-items: center;
-  margin-right: 11%;
-  margin-top: 30px;
 }
 
-.login-card { 
+.primary-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.secondary-container {
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
+  padding: 100px;
+  border-radius: 5px;
+}
+
+.left,
+.right {
+  flex: 1;
+  height: 100%;
+  background-color: #d9d9d9;
+  border-radius: 5px;
+}
+
+.left {
+  background: transparent;
+  width: 70% !important;
+}
+
+.right {
+  width: 30% !important;
+}
+
+
+.login-card {
+  height: auto;
   padding: 30px 27px 30px;
-  border-radius: 1.25rem;
-  background: white; 
   backdrop-filter: blur(10px);
+  border-radius: 0 15px 15px 0;
   text-align: left;
-  box-shadow: 1px -1px 25px 4px rgba(100, 97, 97, 0.75);
+  background: white;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.75);
 }
 
-.login-card > h2 {
+.login-card>h2 {
   font-size: 30px;
   font-weight: 600;
   margin: 15px 0 15px 0;
-  color: #f9f9f9;
+  color: #222;
 }
 
 .login-card img {
   width: 120px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
   padding: 5px;
+  object-fit: cover;
 }
 
-.login-card > h3 {
+.login-card>h3 {
   color: #837f90;
   margin: 0 0 40px;
   font-weight: 500;
@@ -122,25 +125,62 @@ button {
 .login-form {
   width: 100%;
   margin: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-
+.control {
+  width: 100%;
+  height: 35px;
+  color: black;
+  margin: 0;
+  padding: 0;
+  background: white;
+  border: none;
+  border-bottom: 3px solid #999;
+  border-radius: 0;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  text-align: left;
+  font-size: 17px;
+  transition: 0.4s;
+}
 
 .login-form button.control {
+  height: 50px;
   cursor: pointer;
   width: 100%;
-  height: 56px;
-  padding: 0 16px;
   background: black;
   color: white;
   border: 0;
+  border-radius: 5px;
   font-family: inherit;
   font-size: 1rem;
   font-weight: 600;
   text-align: center;
   letter-spacing: 2px;
-  transition: all 0.375s;
+}
+
+.login-form input.control::placeholder {
+  color: #999;
+  font-size: 17px;
+}
+
+
+
+
+.swiper {
+  width: 100%;
+}
+
+.slider-wrapper,
+.carousel,
+.slider {
+  height: 100%;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.75);
+  border-radius: 15px 0px 0px 15px;
+
 }
 
 .username {
@@ -157,12 +197,12 @@ button {
   position: absolute;
   top: 50%;
   right: 16px;
-  translate: 0 -50%;
-  width: 24px;
-  height: 24px;
+  translate: 0 -100%;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 3px solid black;
-  border-top-color: white;
+  border: 3px solid #f5f5f5;
+  border-top-color: black;
   opacity: 0;
   animation: spin 1s infinite linear;
 }
@@ -181,7 +221,19 @@ button {
 }
 
 .alert.visible {
-  height: 32px;
+  height: 26px;
+}
+
+.text-danger {
+  overflow: hidden;
+  height: 0;
+  margin-top: 5px;
+  transition: 0.5s;
+}
+
+.text-danger.visible {
+  height: 26px;
+
 }
 
 #bars {
@@ -225,3 +277,104 @@ button {
 }
 
 
+/* Upload Image styles */
+
+.image-container {
+  height: 150px;
+  width: 150px;
+  position: relative;
+  display: inline-block;
+}
+
+.image-container img {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  transition: filter 0.3s;
+  object-fit: cover;
+}
+
+.image-container:hover img {
+  filter: blur(4px);
+}
+
+.upload-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.image-container:hover .upload-overlay {
+  display: flex;
+}
+
+.upload-text {
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .secondary-container {
+    display: flex;
+    justify-content: space-between;
+    width: 55%;
+    padding: 100px;
+    border-radius: 5px;
+  }
+}
+
+
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 992px) {
+  .secondary-container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    padding: 100px;
+    border-radius: 5px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .secondary-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    padding: 100px;
+    border-radius: 5px;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .secondary-container {
+    display: flex;
+    justify-content: space-between;
+    width: 72%;
+    padding: 100px;
+    border-radius: 5px;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .secondary-container {
+    display: flex;
+    justify-content: space-between;
+    width: 58%;
+    padding: 100px;
+    border-radius: 5px;
+  }
+}
