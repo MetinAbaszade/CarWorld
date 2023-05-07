@@ -12,12 +12,12 @@ namespace AspReactTestApp.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly IAuthSevice _authSevice;
+        private readonly IAuthService _authService;
         private readonly IUserService _userService;
 
-        public AuthController(IAuthSevice authSevice, IUserService userService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
-            _authSevice = authSevice;
+            _authService = authService;
             _userService = userService;
         }
 
@@ -25,7 +25,7 @@ namespace AspReactTestApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponseDto>> Login(LoginUserDto request)
         {
-            var response = await _authSevice.LoginUser(request);
+            var response = await _authService.LoginUser(request);
             if (response.IsSuccessfull)
                 return Ok(response);
 
@@ -35,7 +35,7 @@ namespace AspReactTestApp.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthResponseDto>> RegisterUser(RegisterUserDto request)
         {
-            var user = await _authSevice.RegisterUser(request);
+            var user = await _authService.RegisterUser(request);
             return Ok(user);
         }
 
@@ -49,14 +49,32 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult<AuthResponseDto>> RefreshToken()
         {
-            var response = await _authSevice.RefreshToken();
+            var response = await _authService.RefreshToken();
 
             if (response.IsSuccessfull)
                 return Ok(response);
 
             return BadRequest(response);
+        }
+
+        [HttpPost("sendverificationcode")]
+        public ActionResult<AuthResponseDto> SendVerificationCode([FromBody]string recipientEmail)
+        {
+            var result = _authService.SendVerificationCode(recipientEmail);
+            if (result.IsSuccessfull)
+                return Ok(result);
+            return NotFound(result);
+        }
+
+        [HttpPost("checkverificationcode")]
+        public ActionResult<AuthResponseDto> CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto)
+        {
+            var result = _authService.CheckVerificationCode(verificationCodeDto);
+            if (result.IsSuccessfull)
+                return Ok(result);
+            return NotFound(result);
         }
 
     }

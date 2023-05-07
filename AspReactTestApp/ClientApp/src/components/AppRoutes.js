@@ -1,4 +1,4 @@
-import { Link, NavLink, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Contact from "../pages/Contact";
 import About from "../pages/About";
@@ -8,7 +8,6 @@ import Post from "../pages/posts/Post";
 import PostsLayout from "../pages/posts";
 import Posts from "../pages/posts/Posts";
 import PostNotFound from "../pages/posts/PostNotFound";
-import AuthLayout from "../pages/Auth/AuthLayout";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/Register/Register";
 import PrivateRoute from "./PrivateRoute";

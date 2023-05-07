@@ -3,6 +3,7 @@ using AspReactTestApp.Data;
 using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
 using AspReactTestApp.Services.AuthService;
+using AspReactTestApp.Services.EmailService;
 using AspReactTestApp.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,8 @@ namespace AspReactTestApp
 
             builder.Services.AddScoped<IUserDal, EfUserDal>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAuthSevice, AuthService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer("Data Source=DESKTOP-G1Q07RP;Initial Catalog=JWTAuthorizationPractiseDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
@@ -55,6 +57,8 @@ namespace AspReactTestApp
                         ValidateAudience = false
                     };
                 });
+
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 

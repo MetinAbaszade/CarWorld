@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthService, CookieService } from '../../../Services';
 import './Login.css';
 
@@ -90,7 +90,7 @@ export default function Login() {
     <>
       <div className="login-container">
         <div className="login-card">
-          <img
+          <img alt="Profilephoto"
             src="https://pub-static.fotor.com/assets/projects/pages/5ff61721271e45d2b9bbc6dbbd4b14c7/300w/purple-cute-school-girl-78a8ba2c107c4ce1bb7e5a3de0ed9528.jpg"
           />
           <form className="login-form" onSubmit={SignInHandle}>

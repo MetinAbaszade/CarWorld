@@ -1,6 +1,6 @@
-import Carousel from './CarouselCompenent';
+import Carousel from './Carousel/CarouselCompenent';
 import './Register.css';
-import RegisterCard from './RegisterCard';
+import RegisterCard from './RegisterCard/RegisterCard';
 
 
 export default function Register() {

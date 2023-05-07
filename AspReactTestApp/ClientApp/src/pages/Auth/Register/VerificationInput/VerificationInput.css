@@ -1,0 +1,15 @@
+
+
+.verification-code {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.code-input {
+    width: 30px;
+    text-align: center;
+    border: 0;
+    border-bottom: 1px solid black;
+    outline: none;
+}

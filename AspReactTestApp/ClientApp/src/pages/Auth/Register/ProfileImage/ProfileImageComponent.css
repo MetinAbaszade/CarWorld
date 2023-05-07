@@ -1,0 +1,42 @@
+.image-container {
+    height: 150px;
+    width: 150px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-container img {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    transition: filter 0.3s;
+    object-fit: cover;
+}
+
+.image-container:hover img {
+    filter: blur(4px);
+}
+
+.upload-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.image-container:hover .upload-overlay {
+    display: flex;
+}
+
+.upload-text {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
