@@ -9,6 +9,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Caching.Memory;
 using AspReactTestApp.Services.EmailService;
+using Microsoft.AspNetCore.Http;
+using AspReactTestApp.Services.TokenService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AspReactTestApp.Services.AuthService
 {
@@ -16,22 +19,17 @@ namespace AspReactTestApp.Services.AuthService
     public class AuthService : IAuthService
     {
         private readonly IUserDal _userDal;
-        private readonly IMemoryCache _memoryCache;
         private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         // AuthService constructor
-        public AuthService(IUserDal userDal, 
-                           IMemoryCache memoryCache, 
-                           IEmailService emailService, 
-                           IConfiguration configuration, 
+        public AuthService(IUserDal userDal,
+                           IEmailService emailService,
                            IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
-            _memoryCache = memoryCache;
             _emailService = emailService;
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -52,14 +50,14 @@ namespace AspReactTestApp.Services.AuthService
             }
 
             // Create access token and refresh token
-            var token = CreateToken(user);
-            var refreshToken = GenerateRefreshToken();
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
             await SetRefreshToken(refreshToken, user);
 
             return new AuthResponseDto()
             {
                 IsSuccessfull = true,
-                AccessToken = token,
+                AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
                 TokenExpires = refreshToken.Expires
             };
@@ -92,59 +90,6 @@ namespace AspReactTestApp.Services.AuthService
             };
         }
 
-        // CreateToken method to generate a JWT access token
-        private string CreateToken(User user)
-        {
-            // Create claims for the JWT token
-            List<Claim> claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
-
-            // Create the signing key
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("Appsettings:Token").Value));
-
-            // Create the signing credentials
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            // Create the JWT token
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: creds);
-
-            // Write the JWT token to a string
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            // Set the accessToken cookie
-            var cookieOptions = new CookieOptions()
-            {
-                HttpOnly = true,
-                Expires = token.ValidTo
-            };
-
-            _httpContextAccessor?.HttpContext?.Response
-                .Cookies.Append("accessToken", jwt, cookieOptions);
-
-            return jwt;
-        }
-
-        // GenerateRefreshToken method to create a new refresh token
-        private RefreshToken GenerateRefreshToken()
-        {
-            var refreshToken = new RefreshToken()
-            {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Created = DateTime.Now,
-                Expires = DateTime.Now.AddDays(30)
-            };
-
-            return refreshToken;
-        }
-
         // SetRefreshToken method to store a refresh token in a cookie and update the user record
         private async Task SetRefreshToken(RefreshToken refreshToken, User user)
         {
@@ -166,9 +111,8 @@ namespace AspReactTestApp.Services.AuthService
         // RefreshToken method to refresh an existing JWT access token
         public async Task<AuthResponseDto> RefreshToken()
         {
-            var Users = await _userDal.GetList();
             var refreshToken = _httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"];
-            var user = Users.FirstOrDefault(u => u.RefreshToken == refreshToken);
+            var user = await _userDal.Get(user => user.RefreshToken == refreshToken);
 
             if (user == null)
             {
@@ -179,15 +123,16 @@ namespace AspReactTestApp.Services.AuthService
                 throw new ExpiredTokenException("Token has expired!");
             }
 
-            string token = CreateToken(user);
-            var newRefreshToken = GenerateRefreshToken();
+            // Generating new Access and Refresh Token
+            string newAccessToken = _tokenService.GenerateAccessToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
             await SetRefreshToken(newRefreshToken, user);
 
             return new AuthResponseDto
             {
                 IsSuccessfull = true,
                 Message = "Token Successfully refreshed!",
-                AccessToken = token,
+                AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken.Token,
                 TokenExpires = newRefreshToken.Expires
             };
@@ -212,60 +157,21 @@ namespace AspReactTestApp.Services.AuthService
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
-                // SequenceEqual vs Equals
             }
-        }
-
-        // GenerateVerificationCode method to create a new verification code
-        private string GenerateVerificationCode()
-        {
-            var random = new Random();
-            return random.Next(100000, 1000000).ToString();
         }
 
         // SendVerificationCode method to send a verification code to a user's email
-        public AuthResponseDto SendVerificationCode(string recipientEmail)
+        public AuthResponseDto SendVerificationCode([FromBody] string recipientEmail)
         {
-            if (!CanRequestVerificationCode(recipientEmail))
-            {
-                return new AuthResponseDto
-                {
-                    IsSuccessfull = false,
-                    Message = "You can request a new verification code only once per minute."
-                };
-            }
-
             try
             {
-                var subject = "Verification Code for CarUniverse Account (Expires in 2 Minutes)";
-
-                var verificationCode = GenerateVerificationCode();
-                StoreVerificationCodeInCache(recipientEmail, verificationCode);
-
-                var body = @$"<div style=""font-size: 20px;"">
-Thank you for choosing CarUniverse as your preferred platform for all your automotive needs. As part of our security measures, we require all users to verify their account before gaining full access to our services.<br><br>
-
-Your verification code is: <b>{{verificationCode}}</b><br><br>
-
-Please enter this code in the designated field on the CarUniverse app or website to complete the verification process. Please note that this code is only valid for the next 2 minutes. After that, it will expire and you will need to request a new code.<br><br>
-
-If you did not request this verification code, please disregard this message.<br><br>
-
-If you have any questions or concerns, please do not hesitate to contact our customer support team for assistance. We are available 24/7 to assist you.<br>
-
-Thank you for choosing CarUniverse.<br><br>
-
-Best regards,<br>
-The CarUniverse Team
-
-</div>";
-
-                _emailService.SendEmail(recipientEmail, subject, body);
+                // SendVerificationCode method generates verification code, stores it in the cache and sends it to the email
+                var result = _emailService.SendVerificationCode(recipientEmail);
 
                 return new AuthResponseDto
                 {
-                    IsSuccessfull = true,
-                    Message = "Verification Code Sent Successfully"
+                    IsSuccessfull = result.IsSuccessful,
+                    Message = result.Message
                 };
             }
             catch (Exception ex)
@@ -277,62 +183,27 @@ The CarUniverse Team
             }
         }
 
-        // StoreVerificationCodeInCache method to store the generated verification code in the cache
-        private void StoreVerificationCodeInCache(string email, string verificationCode)
-        {
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
-            _memoryCache.Set(email, verificationCode, cacheEntryOptions);
-        }
-
         // CheckVerificationCode method to validate the user-provided verification code
         public AuthResponseDto CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto)
         {
-            var keyExists = _memoryCache.TryGetValue(verificationCodeDto.Email, out string storedVerificationCode);
-
-            if (!keyExists)
+            try
             {
+                var result = _emailService.CheckVerificationCode(verificationCodeDto);
+
                 return new AuthResponseDto
                 {
-                    Message = "Please request code again"
+                    IsSuccessfull = result.IsSuccessful,
+                    Message = result.Message
                 };
             }
 
-            if (storedVerificationCode == verificationCodeDto.VerificationCode)
+            catch (Exception ex)
             {
                 return new AuthResponseDto
                 {
-                    IsSuccessfull = true,
-                    Message = "Verification code is correct"
+                    Message = ex.Message
                 };
             }
-
-            return new AuthResponseDto
-            {
-                Message = "Verification code is not correct"
-            };
-        }
-
-        // CanRequestVerificationCode method to determine whether the user can request a new verification code
-        private bool CanRequestVerificationCode(string email)
-        {
-            if (!_memoryCache.TryGetValue($"{email}_lastRequest", out DateTime lastRequestTimestamp))
-            {
-                // No previous request, allow the current request
-                _memoryCache.Set($"{email}_lastRequest", DateTime.UtcNow);
-                return true;
-            }
-
-            var timeSinceLastRequest = DateTime.UtcNow - lastRequestTimestamp;
-
-            if (timeSinceLastRequest.TotalMinutes >= 1)
-            {
-                // Last request was more than a minute ago, update the timestamp and allow the current request
-                _memoryCache.Set($"{email}_lastRequest", DateTime.UtcNow);
-                return true;
-            }
-
-            // Last request was within the last minute, disallow the current request
-            return false;
         }
     }
 }

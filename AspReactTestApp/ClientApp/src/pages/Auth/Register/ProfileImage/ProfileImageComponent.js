@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import './ProfileImageComponent.css'
 
 export default function ProfileImageComponent({ setSelectedImage }) {

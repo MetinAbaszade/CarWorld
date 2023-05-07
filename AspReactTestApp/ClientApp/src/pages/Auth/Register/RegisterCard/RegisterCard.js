@@ -14,6 +14,7 @@ import VerificationInput from "../VerificationInput/VerificationInput";
 export default function RegisterCard() {
     const spinner = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [verificationCode, setVerificationCode] = useState(null);
 
     SwiperCore.use([Navigation]);
 
@@ -120,9 +121,7 @@ export default function RegisterCard() {
                 slidesPerView={1}
             >
 
-                <SwiperSlide>
-                    <VerificationInput handlePrevSlide={handlePrevSlide} />
-                </SwiperSlide>
+            
                 
                 <SwiperSlide>
                     <div>
@@ -232,7 +231,9 @@ export default function RegisterCard() {
                     </div>
                 </SwiperSlide>
 
-               
+                {/* <SwiperSlide>
+                    <VerificationInput handlePrevSlide={handlePrevSlide} setVerificationCode={setVerificationCode} />
+                </SwiperSlide> */}
             </Swiper >
 
         </form>
