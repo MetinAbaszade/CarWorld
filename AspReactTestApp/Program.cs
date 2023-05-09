@@ -4,6 +4,7 @@ using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
 using AspReactTestApp.Services.AuthService;
 using AspReactTestApp.Services.EmailService;
+using AspReactTestApp.Services.FileService;
 using AspReactTestApp.Services.TokenService;
 using AspReactTestApp.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,6 +28,7 @@ namespace AspReactTestApp
             builder.Services.AddScoped<IUserDal, EfUserDal>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ITokenService, JwtTokenService>();
 

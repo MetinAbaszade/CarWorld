@@ -1,5 +1,4 @@
 
-
 export function getUser() {
     return JSON.parse(localStorage.getItem('User'));
 }
@@ -35,24 +34,20 @@ export async function Login(userName, password) {
 export async function Register(name, surname, userName, email, profileImage, password, retypePassword) {
     var response;
     try {
+        const formData = new FormData();
+        formData.append('Name', name);
+        formData.append('Surname', surname);
+        formData.append('Email', email);
+        formData.append('UserName', userName);
+        formData.append('Password', password);
+        formData.append('RetypePassword', retypePassword);
+
         await fetch('api/Auth/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'Name': name,
-                'Surname': surname,
-                'Email': email,
-                'UserName': userName,
-                'ProfileImage': profileImage,
-                'Password': password,
-                'RetypePassword': retypePassword
-            })
+            body: formData
 
         }).then(response => response.json())
             .then(authResponse => {
-                console.log(authResponse);
                 response = authResponse;
             }).catch(error => {
                 console.error('Error occured while registering user:', error.message);
@@ -76,20 +71,18 @@ export async function CheckUserExists(userName) {
                 'UserName': userName
             })
 
-        });
-        console.log(response)
+        }).then(response => response.json());
 
-        if (response.ok) 
-            return true;
-        return false;
+        return response;
     }
-    
+
     catch (error) {
         console.log('Error occured while searching for user with appropriate username: ' + error.message);
     }
 }
 
 export async function SendVerificationCode(recipientEmail) {
+    var response;
     try {
         await fetch('api/Auth/sendverificationcode', {
             method: 'POST',
@@ -97,13 +90,15 @@ export async function SendVerificationCode(recipientEmail) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(recipientEmail)
-        }).then(response => response.json() )
+        }).then(response => response.json())
             .then(authResponse => {
                 console.log(authResponse);
-                return authResponse;
+                response = authResponse;
             }).catch(error => {
                 console.error('Error occured while sending VerificationCode:', error.message);
             });;
+
+        return response;
     }
     catch (error) {
         console.log('Error occured while sending VerificationCode: ' + error.message);
@@ -111,6 +106,7 @@ export async function SendVerificationCode(recipientEmail) {
 }
 
 export async function CheckVerificationCode(email, verificationCode) {
+    var response;
     try {
         await fetch('api/Auth/checkverificationcode', {
             method: 'POST',
@@ -124,10 +120,11 @@ export async function CheckVerificationCode(email, verificationCode) {
         }).then(response => response.json())
             .then(authResponse => {
                 console.log(authResponse);
-                return authResponse;
+                response = authResponse;
             }).catch(error => {
                 console.error('Error occured while checking VerificationCode:', error.message);
             });;
+        return response;
     }
     catch (error) {
         console.log('Error occured while checking VerificationCode: ' + error.message);

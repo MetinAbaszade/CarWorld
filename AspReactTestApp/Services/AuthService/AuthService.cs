@@ -1,35 +1,35 @@
-﻿using AspReactTestApp.CustomExceptions;
+﻿using System.Text;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
+using AspReactTestApp.CustomExceptions;
 using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using Microsoft.Extensions.Caching.Memory;
+using AspReactTestApp.Services.FileService;
 using AspReactTestApp.Services.EmailService;
-using Microsoft.AspNetCore.Http;
 using AspReactTestApp.Services.TokenService;
-using Microsoft.AspNetCore.Mvc;
+using AspReactTestApp.Validations;
 
 namespace AspReactTestApp.Services.AuthService
 {
-    // AuthService class that implements the IAuthService interface
     public class AuthService : IAuthService
     {
         private readonly IUserDal _userDal;
         private readonly IEmailService _emailService;
         private readonly ITokenService _tokenService;
+        private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        // AuthService constructor
-        public AuthService(IUserDal userDal,
-                           IEmailService emailService,
+        public AuthService(IUserDal userDal, 
+                           IEmailService emailService, 
+                           ITokenService tokenService, 
+                           IFileService fileService, 
                            IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
             _emailService = emailService;
+            _tokenService = tokenService;
+            _fileService = fileService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -66,8 +66,36 @@ namespace AspReactTestApp.Services.AuthService
         // RegisterUser method for user registration
         public async Task<AuthResponseDto> RegisterUser(RegisterUserDto request)
         {
+            var registerValidator = new RegisterUserDtoValidator();
+            var validationResult = registerValidator.Validate(request);
+            if (!validationResult.IsValid)
+            {
+                var errors = new Dictionary<string, string>();
+
+                foreach (var error in validationResult.Errors)
+                {
+                    errors[error.PropertyName] = error.ErrorMessage;
+                }
+
+                return new AuthResponseDto
+                {
+                    Message = "There are Validation errors",
+                    Errors = errors
+                };
+            }
+
             // Create password hash and salt
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            var profileImageUrl = string.Empty;
+            if (request.ProfileImage == null)
+            {
+                profileImageUrl = _fileService.GetDefaultProfileImageUrl();
+            }
+            else
+            {
+                profileImageUrl = await _fileService.SaveProfileImage(request.ProfileImage);
+            }
 
             // Create user object
             var user = new User()
@@ -75,7 +103,7 @@ namespace AspReactTestApp.Services.AuthService
                 Name = request.Name,
                 Surname = request.Surname,
                 UserName = request.UserName,
-                // ProfileImageUrl = request.ProfileImageUrl,
+                ProfileImageUrl = profileImageUrl,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Role = "User"
@@ -165,13 +193,31 @@ namespace AspReactTestApp.Services.AuthService
         {
             try
             {
-                // SendVerificationCode method generates verification code, stores it in the cache and sends it to the email
-                var result = _emailService.SendVerificationCode(recipientEmail);
+                if (!_emailService.CanRequestVerificationCode(recipientEmail))
+                {
+                    Dictionary<string, string> errors = new();
+                    var errorMessage = "You have requested too many verification code, please try again later";
+                    errors["email"] = errorMessage;
+                    return new AuthResponseDto
+                    {
+                        IsSuccessfull = false,
+                        Message = errorMessage, 
+                        Errors = errors
+                    };
+                }
+
+                var verificationCode = _emailService.GenerateVerificationCode();
+                var verificationEmailBody = _emailService.GenerateVerificationEmail(verificationCode);
+                var verificationEmailSubject = "Verification Code for CarUniverse Account (Expires in 2 Minutes)";
+
+                _emailService.SendEmail(recipientEmail, verificationEmailSubject, verificationEmailBody);
+                _emailService.StoreVerificationCodeInCache(recipientEmail, verificationCode);
+
 
                 return new AuthResponseDto
                 {
-                    IsSuccessfull = result.IsSuccessful,
-                    Message = result.Message
+                    IsSuccessfull = true,
+                    Message = "Verification sent successfully"
                 };
             }
             catch (Exception ex)
@@ -189,10 +235,19 @@ namespace AspReactTestApp.Services.AuthService
             try
             {
                 var result = _emailService.CheckVerificationCode(verificationCodeDto);
+                if (!result.IsSuccessful)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsSuccessfull = false,
+                        Message = result.Message,
+                        Errors = result.Errors
+                    };
+                }
 
                 return new AuthResponseDto
                 {
-                    IsSuccessfull = result.IsSuccessful,
+                    IsSuccessfull = true,
                     Message = result.Message
                 };
             }

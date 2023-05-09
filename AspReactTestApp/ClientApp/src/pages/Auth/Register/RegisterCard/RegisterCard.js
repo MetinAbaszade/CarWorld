@@ -14,8 +14,7 @@ import VerificationInput from "../VerificationInput/VerificationInput";
 export default function RegisterCard() {
     const spinner = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
-    const [verificationCode, setVerificationCode] = useState(null);
-
+    const [loading, setLoading] = useState(false);
     SwiperCore.use([Navigation]);
 
     const { formik, FirstPageSchema, SecondPageSchema, validateForm } = useFormValidation(selectedImage);
@@ -27,13 +26,10 @@ export default function RegisterCard() {
 
         const response = await AuthService.CheckUserExists(value);
 
-        if (value === "Matin") {
+        if (response) {
             formik.setFieldError("userName", "Username already exists");
-
-            //alert.current.classList.add("visible");
         } else {
             formik.errors.email = ""
-            // alert.current.classList.remove("visible");
         }
     };
 
@@ -93,9 +89,17 @@ export default function RegisterCard() {
         valid = await validateForm(schema, valuesToValidate);
 
         if (valid) {
-            if (activeIndex === 1) { 
-                const authResponse = await AuthService.SendVerificationCode(formik.values.email);
-                console.log(authResponse);
+            if (activeIndex === 1) {
+                setLoading(true);
+                const sendVerificationResponse = await AuthService.SendVerificationCode(formik.values.email);
+                setLoading(false);
+
+                if (!sendVerificationResponse.isSuccessfull) {
+                    const errorModel = sendVerificationResponse.errors;
+                    console.log(errorModel)
+                    formik.setErrors(errorModel);
+                    return;
+                }
             }
             swiperRef.current.slideNext();
             return;
@@ -104,6 +108,11 @@ export default function RegisterCard() {
 
     const handlePrevSlide = () => {
         if (swiperRef.current) {
+            const activeIndex = swiperRef.current.activeIndex;
+
+            if (activeIndex == 2) {
+                formik.setFieldValue('verificationCode', new Array(6).fill(''));
+            }
             swiperRef.current.slidePrev();
         }
     };
@@ -112,6 +121,7 @@ export default function RegisterCard() {
     return (
         <form className="login-form" onSubmit={formik.handleSubmit}>
             <ProfileImageComponent setSelectedImage={setSelectedImage} />
+
             <h2 className="text-center">Create Account</h2>
             <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -120,9 +130,6 @@ export default function RegisterCard() {
                 spaceBetween={50}
                 slidesPerView={1}
             >
-
-            
-                
                 <SwiperSlide>
                     <div>
                         <input
@@ -180,7 +187,7 @@ export default function RegisterCard() {
                             spellCheck="false"
                             className="control"
                             placeholder="Password"
-                            onChange={formik.handleChange} 
+                            onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.password}
                         />
@@ -217,23 +224,31 @@ export default function RegisterCard() {
                             type="email"
                             name="email"
                             placeholder="Email"
+                            disabled={loading}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.email}
                         />
-                        <label className={`text-danger ${formik.errors.email ? "visible" : ""}`}>
-                            {formik.errors.email}
-                        </label>
                     </div>
+                    <label className={`text-danger ${formik.errors.email ? "visible" : ""}`}>
+                        {formik.errors.email}
+                    </label>
                     <div className="d-flex">
-                        <button className="control w-25 ms-1 me-2 mt-2" type="button" onClick={handlePrevSlide}>&larr;</button>
-                        <button className="control mt-2" type="button" onClick={handleNextSlide}>Next</button>
+                        <button className="control w-25 ms-1 me-2 mt-2" type="button" disabled={loading} onClick={handlePrevSlide}>&larr;</button>
+                        <button className="control mt-2 text-center" type="button" disabled={loading} onClick={handleNextSlide}>
+                            {loading ? (
+                                <div className="spinner visible text-center m-auto"></div>
+                            ) : (
+                                "Next"
+                            )}
+                        </button>
                     </div>
                 </SwiperSlide>
 
-                {/* <SwiperSlide>
-                    <VerificationInput handlePrevSlide={handlePrevSlide} setVerificationCode={setVerificationCode} />
-                </SwiperSlide> */}
+                <SwiperSlide>
+                    <VerificationInput handlePrevSlide={handlePrevSlide} formik={formik} />
+                </SwiperSlide>
+
             </Swiper >
 
         </form>

@@ -14,23 +14,40 @@ export default function useFormValidation(selectedImage) {
             userName: 'MatinAbaszade',
             password: 'aaaaaa',
             retypePassword: 'aaaaaa',
+            verificationCode: new Array(6).fill('')
         },
         onSubmit: async (values) => {
             let name = values.name
             let surname = values.surname;
-            let username = values.userName
-            let email = values.userName
+            let userName = values.userName
+            let email = values.email
             let password = values.password;
             let retypePassword = values.retypePassword;
+            let verificationCode = values.verificationCode;
 
-            let authResponse = await AuthService.Register(name, surname, username, email, selectedImage, password, retypePassword);
-            if (authResponse.isSuccessfull)
-                navigate("/Auth/Login");
+            var verificationCodeString = verificationCode.join('');
+            var emailVerificationResponse = await AuthService.CheckVerificationCode(email, verificationCodeString)
+            
+            if (!emailVerificationResponse.isSuccessfull) {
+                const errorModel = emailVerificationResponse.errors;
+                formik.setErrors(errorModel);
+                return;
+            }
+         
+            let registerResponse = await AuthService.Register(name, surname, userName, email, selectedImage, password, retypePassword);
+
+            if (!registerResponse.isSuccessfull) {
+                const registerResponseJson = await registerResponse.json();
+                const errorModel = registerResponseJson.errors;
+                formik.setErrors(errorModel);
+                return;
+            }
+            navigate("/Auth/Login");
         },
     });
 
     //#region Schemas to validate each page:
-    
+
     const FirstPageSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         surname: Yup.string().required('Surname is required'),

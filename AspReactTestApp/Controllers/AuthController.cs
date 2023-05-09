@@ -33,38 +33,44 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponseDto>> RegisterUser(RegisterUserDto request)
+        public async Task<ActionResult<AuthResponseDto>> RegisterUser([FromForm] RegisterUserDto request)
         {
             var user = await _authService.RegisterUser(request);
             return Ok(user);
         }
 
         [HttpPost("checkuserexists")]
-        public async Task<ActionResult<bool>> CheckUserExists(LoginUserDto request)
+        public async Task<ActionResult<AuthResponseDto>> CheckUserExists(LoginUserDto request)
         {
-            var result = await _userService.CheckUserExists(request.UserName);
-            if (result)
+            try
+            {
+                var result = await _userService.CheckUserExists(request.UserName);
                 return Ok(result);
-            return NotFound(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult<AuthResponseDto>> RefreshToken()
         {
-            var response = await _authService.RefreshToken();
+            var result = await _authService.RefreshToken();
 
-            if (response.IsSuccessfull)
-                return Ok(response);
+            if (result.IsSuccessfull)
+                return Ok(result);
 
-            return BadRequest(response);
+            return NotFound(result);
         }
 
         [HttpPost("sendverificationcode")]
-        public ActionResult<AuthResponseDto> SendVerificationCode([FromBody]string recipientEmail)
+        public ActionResult<AuthResponseDto> SendVerificationCode([FromBody] string recipientEmail)
         {
             var result = _authService.SendVerificationCode(recipientEmail);
             if (result.IsSuccessfull)
                 return Ok(result);
+
             return NotFound(result);
         }
 
