@@ -1,10 +1,9 @@
 ﻿using AspReactTestApp.DTOs;
-using AspReactTestApp.Entities.Concrete;
 using AspReactTestApp.Services.AuthService;
 using AspReactTestApp.Services.UserService;
 using Azure;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace AspReactTestApp.Controllers
 {
@@ -23,24 +22,31 @@ namespace AspReactTestApp.Controllers
 
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDto>> Login(LoginUserDto request)
+        public async Task<ActionResult<ResponseDto>> Login(LoginUserDto request)
         {
-            var response = await _authService.LoginUser(request);
+            var (response, tokens) = await _authService.LoginUser(request);
+
             if (response.IsSuccessfull)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    Secure = true, // cookie is to be transmitted over https only
+                    HttpOnly = true,
+                    Expires = tokens.TokenExpires,
+                    SameSite = SameSiteMode.Strict
+                };
+
+                // Set access token in cookie
+                Response.Cookies.Append("access_token", tokens.AccessToken, cookieOptions);
+
                 return Ok(response);
+            }
 
             return NotFound(response);
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<AuthResponseDto>> RegisterUser([FromForm] RegisterUserDto request)
-        {
-            var user = await _authService.RegisterUser(request);
-            return Ok(user);
-        }
-
         [HttpPost("checkuserexists")]
-        public async Task<ActionResult<AuthResponseDto>> CheckUserExists(LoginUserDto request)
+        public async Task<ActionResult<ResponseDto>> CheckUserExists(LoginUserDto request)
         {
             try
             {
@@ -54,33 +60,26 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<AuthResponseDto>> RefreshToken()
+        public async Task<ActionResult<ResponseDto>> RefreshToken()
         {
-            var result = await _authService.RefreshToken();
+            var (response, tokens) = await _authService.RefreshToken();
 
-            if (result.IsSuccessfull)
-                return Ok(result);
+            if (response.IsSuccessfull)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    Secure = true, // cookie is to be transmitted over https only
+                    HttpOnly = true,
+                    Expires = tokens.TokenExpires,
+                    SameSite = SameSiteMode.Strict
+                };
 
-            return NotFound(result);
-        }
+                // Set access token in cookie
+                Response.Cookies.Append("access_token", tokens.AccessToken, cookieOptions);
+                return Ok(response);
+            }
 
-        [HttpPost("sendverificationcode")]
-        public ActionResult<AuthResponseDto> SendVerificationCode([FromBody] string recipientEmail)
-        {
-            var result = _authService.SendVerificationCode(recipientEmail);
-            if (result.IsSuccessfull)
-                return Ok(result);
-
-            return NotFound(result);
-        }
-
-        [HttpPost("checkverificationcode")]
-        public ActionResult<AuthResponseDto> CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto)
-        {
-            var result = _authService.CheckVerificationCode(verificationCodeDto);
-            if (result.IsSuccessfull)
-                return Ok(result);
-            return NotFound(result);
+            return NotFound(response);
         }
 
     }

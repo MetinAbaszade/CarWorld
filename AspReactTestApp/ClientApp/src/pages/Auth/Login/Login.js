@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthService, CookieService } from '../../../Services';
-import './Login.css';
+import '../Auth.css';
+import LoginCard from "./LoginCard/LoginCard";
+import Carousel from "../Carousel/CarouselCompenent";
 
 export default function Login() {
   const nameInput = useRef();
@@ -35,13 +37,7 @@ export default function Login() {
     if (authResponse.isSuccessfull) {
       CookieService.setCookie("refreshtoken", authResponse.refreshToken);
       CookieService.setCookie("accesstoken", authResponse.token);
-
-      let refreshtoken = CookieService.getCookie("refreshtoken");
-      let accesstoken = CookieService.getCookie("accesstoken");
-      console.log("accesstoken: " + accesstoken);
-      console.log("refreshtoken: " + refreshtoken);
-
-     
+      
       navigate("/Profile");
     }
     else {
@@ -87,38 +83,15 @@ export default function Login() {
 
 
   return (
-    <>
-      <div className="login-container">
-        <div className="login-card">
-          <img alt="Profilephoto"
-            src="https://pub-static.fotor.com/assets/projects/pages/5ff61721271e45d2b9bbc6dbbd4b14c7/300w/purple-cute-school-girl-78a8ba2c107c4ce1bb7e5a3de0ed9528.jpg"
-          />
-          <form className="login-form" onSubmit={SignInHandle}>
-            <div className="username">
-              <input
-                spellCheck="false"
-                className="control"
-                ref={nameInput}
-                type="text"
-                placeholder="Username"
-                onKeyUp={handleUsernameChange }
-                onKeyDown={handleStartTyping}
-              />
-              <div ref={spinner} className="spinner"></div>
-            </div>
-            <div ref={alert} className="alert">Username already exists</div>
-            <input
-              spellCheck="false"
-              className="control"
-              ref={passwordInput}
-              type="password"
-              placeholder="Password"
-            />
-            <button className="control" type="button" onClick={() => { navigate('/auth/register') }}>JOIN NOW</button>
-            <button className="control" type="button">Sign In</button>
-          </form>
+    <div className="primary-container">
+      <div className="secondary-container">
+        <div className="left">
+          <Carousel />
+        </div>
+        <div className="right login-card">
+          <LoginCard />
         </div>
       </div>
-    </>
+    </div>
   );
 }

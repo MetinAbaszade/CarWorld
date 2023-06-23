@@ -3,7 +3,7 @@ import { AuthService } from '../../../Services';
 import { useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 
-export default function useFormValidation(selectedImage) {
+export default function useRegisterFormValidation(selectedImage) {
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -25,8 +25,8 @@ export default function useFormValidation(selectedImage) {
             let retypePassword = values.retypePassword;
             let verificationCode = values.verificationCode;
 
-            var verificationCodeString = verificationCode.join('');
-            var emailVerificationResponse = await AuthService.CheckVerificationCode(email, verificationCodeString)
+            let verificationCodeString = verificationCode.join('');
+            let emailVerificationResponse = await AuthService.CheckVerificationCode(email, verificationCodeString)
             
             if (!emailVerificationResponse.isSuccessfull) {
                 const errorModel = emailVerificationResponse.errors;
@@ -37,8 +37,7 @@ export default function useFormValidation(selectedImage) {
             let registerResponse = await AuthService.Register(name, surname, userName, email, selectedImage, password, retypePassword);
 
             if (!registerResponse.isSuccessfull) {
-                const registerResponseJson = await registerResponse.json();
-                const errorModel = registerResponseJson.errors;
+                const errorModel = registerResponse.errors;
                 formik.setErrors(errorModel);
                 return;
             }

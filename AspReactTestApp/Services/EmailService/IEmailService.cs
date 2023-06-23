@@ -1,5 +1,4 @@
 ﻿using AspReactTestApp.DTOs;
-using AspReactTestApp.ResponseModels;
 
 namespace AspReactTestApp.Services.EmailService
 {
@@ -8,8 +7,9 @@ namespace AspReactTestApp.Services.EmailService
         public void SendEmail(string recipientEmail, string subject, string body);
         public string GenerateVerificationCode();
         public string GenerateVerificationEmail(string verificationCode);
+        public ResponseDto SendVerificationCode(string recipientEmail); 
         public bool CanRequestVerificationCode(string email);
         public void StoreVerificationCodeInCache(string email, string verificationCode);
-        public EmailVerificationResult CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto);
+        public ResponseDto CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto);
     }
 }

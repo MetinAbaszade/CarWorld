@@ -1,9 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using AspReactTestApp.DTOs;
-using Microsoft.Extensions.Caching.Memory;
-using AspReactTestApp.CustomExceptions;
-using AspReactTestApp.ResponseModels;
+using Microsoft.Extensions.Caching.Memory; 
 
 namespace AspReactTestApp.Services.EmailService
 {
@@ -95,15 +93,56 @@ The CarUniverse Team
 
             var timeSinceLastRequest = DateTime.UtcNow - lastRequestTimestamp;
 
-            if (timeSinceLastRequest.TotalMinutes >= 1)
+            if (timeSinceLastRequest.TotalMinutes <= 1)
             {
-                // Last request was more than a minute ago, update the timestamp and allow the current request
-                _memoryCache.Set($"{email}_lastRequest", DateTime.UtcNow);
-                return true;
+                // Last request was within the last minute, disallow the current request
+                return false;
             }
 
-            // Last request was within the last minute, disallow the current request
-            return false;
+            // Last request was more than a minute ago, update the timestamp and allow the current request
+            _memoryCache.Set($"{email}_lastRequest", DateTime.UtcNow);
+            return true;
+        }
+
+        // SendVerificationCode method to send a verification code to a user's email
+        public ResponseDto SendVerificationCode(string recipientEmail)
+        {
+            try
+            {
+                if (!CanRequestVerificationCode(recipientEmail))
+                {
+                    Dictionary<string, string> errors = new();
+                    var errorMessage = "You have requested too many verification code, please try again later";
+                    errors["email"] = errorMessage;
+                    return new ResponseDto
+                    {
+                        IsSuccessfull = false,
+                        Message = errorMessage,
+                        Errors = errors
+                    };
+                }
+
+                var verificationCode = GenerateVerificationCode();
+                var verificationEmailBody = GenerateVerificationEmail(verificationCode);
+                var verificationEmailSubject = "Verification Code for CarUniverse Account (Expires in 2 Minutes)";
+
+                SendEmail(recipientEmail, verificationEmailSubject, verificationEmailBody);
+                StoreVerificationCodeInCache(recipientEmail, verificationCode);
+
+
+                return new ResponseDto
+                {
+                    IsSuccessfull = true,
+                    Message = "Verification sent successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto
+                {
+                    Message = ex.Message
+                };
+            }
         }
 
         // StoreVerificationCodeInCache method to store the generated verification code in the cache
@@ -114,7 +153,7 @@ The CarUniverse Team
         }
 
         // CheckVerificationCode method to validate the user-provided verification code
-        public EmailVerificationResult CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto)
+        public ResponseDto CheckVerificationCode(CheckVerificationCodeDto verificationCodeDto)
         {
             var keyExists = _memoryCache.TryGetValue(verificationCodeDto.Email, out string storedVerificationCode);
             Dictionary<string, string> errors = new();
@@ -125,33 +164,32 @@ The CarUniverse Team
                 errorMessage = "Please request a new code.";
                 errors["verificationCode"] = errorMessage;
 
-                return new EmailVerificationResult
+                return new ResponseDto
                 {
-                    IsSuccessful = false,
-                    Message = errorMessage, 
+                    Message = errorMessage,
                     Errors = errors
                 };
             }
 
             if (storedVerificationCode == verificationCodeDto.VerificationCode)
             {
-                return new EmailVerificationResult
+                return new ResponseDto
                 {
-                    IsSuccessful = true,
+                    IsSuccessfull = true,
                     Message = "Email Verification successful",
                     Errors = errors
                 };
             }
 
-
             errorMessage = "Incorrect verification code entered.";
             errors["verificationCode"] = errorMessage;
-            return new EmailVerificationResult
+            return new ResponseDto
             {
-                IsSuccessful = false,
                 Message = errorMessage,
                 Errors = errors
             };
         }
+
+
     }
 }

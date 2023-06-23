@@ -25,6 +25,17 @@ namespace AspReactTestApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:44461/") // Allow requests from any origin
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials(); // allow sending credentials (cookies);
+                });
+            });
+
             builder.Services.AddScoped<IUserDal, EfUserDal>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -76,6 +87,7 @@ namespace AspReactTestApp
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

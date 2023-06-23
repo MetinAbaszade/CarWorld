@@ -11,6 +11,16 @@ html, body, .wrapper {
   }
 }
 
+
+a{
+  color: #111;
+  text-decoration: none;
+}
+
+a:hover {
+  color: black; 
+}
+
 .root {
   display: flex;
   justify-content: flex-end;
@@ -122,6 +132,7 @@ body {
   color: black;
   margin: 0;
   padding: 0;
+  padding-left: 7px;
   background: white;
   border: none;
   border-bottom: 3px solid #999;
@@ -129,16 +140,17 @@ body {
   outline: none;
   font-family: 'Poppins', sans-serif;
   text-align: left;
-  font-size: 18px;
+  font-size: 20px;
   transition: 0.4s;
 }
 
 .login-form button.control {
   position: relative;
   height: 50px;
+  margin-top: 10px;
   cursor: pointer;
   width: 100%;
-  background: black;
+  background: #111;
   color: white;
   border: 0;
   border-radius: 5px;

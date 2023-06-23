@@ -7,7 +7,6 @@ export class Layout extends Component {
     render() {
         return (
             <div className='w-100 h-100'>
-                <NavMenu />
                 {this.props.children}
             </div>
         );

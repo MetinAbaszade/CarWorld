@@ -8,9 +8,9 @@ export default function VerificationInput({ handlePrevSlide, formik }) {
         // Checking for number
         e.target.value = e.target.value.replace(/[^0-9]/g, '');
 
-        const newCode = [...formik.values.verificationCode];
-        newCode[index] = e.target.value;
-        formik.setFieldValue('verificationCode', newCode);
+        const verificationCode = [...formik.values.verificationCode];
+        verificationCode[index] = e.target.value;
+        formik.setFieldValue('verificationCode', verificationCode);
 
         if (e.target.value.length === 1 && nextInput) {
             nextInput.focus();

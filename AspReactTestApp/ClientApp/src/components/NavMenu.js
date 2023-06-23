@@ -44,7 +44,7 @@ export class NavMenu extends Component {
                                 <NavLink tag={Link} to="/posts">Posts</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} to="/contact">Contact</NavLink>
+                                <NavLink tag={Link} to="/auth/login">Login</NavLink>
                             </NavItem>
                         </ul>
                     </Collapse>

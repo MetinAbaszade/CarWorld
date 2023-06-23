@@ -42,13 +42,13 @@ export async function Register(name, surname, userName, email, profileImage, pas
         formData.append('Password', password);
         formData.append('RetypePassword', retypePassword);
 
-        await fetch('api/Auth/register', {
+        await fetch('api/User/register', {
             method: 'POST',
             body: formData
 
         }).then(response => response.json())
-            .then(authResponse => {
-                response = authResponse;
+            .then(responseJson => {
+                response = responseJson;
             }).catch(error => {
                 console.error('Error occured while registering user:', error.message);
             });
@@ -84,7 +84,7 @@ export async function CheckUserExists(userName) {
 export async function SendVerificationCode(recipientEmail) {
     var response;
     try {
-        await fetch('api/Auth/sendverificationcode', {
+        await fetch('api/Email/sendverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ export async function SendVerificationCode(recipientEmail) {
 export async function CheckVerificationCode(email, verificationCode) {
     var response;
     try {
-        await fetch('api/Auth/checkverificationcode', {
+        await fetch('api/Email/checkverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

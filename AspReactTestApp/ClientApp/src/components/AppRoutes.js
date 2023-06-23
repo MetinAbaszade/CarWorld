@@ -10,16 +10,16 @@ import Posts from "../pages/posts/Posts";
 import PostNotFound from "../pages/posts/PostNotFound";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/Register/Register";
-import PrivateRoute from "./PrivateRoute";
+import { NavMenu } from "./NavMenu";
 
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/" element={<><NavMenu /><Home /></>} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
-            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path="/posts" element={<PrivateRoute><PostsLayout /></PrivateRoute>}>
+            <Route path="/profile" element={<><NavMenu /><Profile /></>} />
+            <Route path="/posts" element={<><NavMenu /><PostsLayout /></>}>
                 <Route index={true} element={<Posts />} />
                 <Route path="/posts/:url/:id" element={<Post />} />
                 <Route path="*" element={<PostNotFound />} />

@@ -2,36 +2,27 @@ import React, { useState, useRef, useCallback } from "react";
 import { AuthService } from '../../../../Services';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation } from 'swiper/core';
-import useFormValidation from '../../Validations/useFormValidation';
+import useRegisterFormValidation from "../../Validations/useRegisterFormValidation";
 import ProfileImageComponent from '../ProfileImage/ProfileImageComponent'
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import StrengthBar from "../StrengthBar/StrengthBarComponent";
-import VerificationInput from "../VerificationInput/VerificationInput";
+import VerificationInput from "../VerificationInput/VerificationInput"; 
+import { NavLink } from "react-router-dom";
+
 
 export default function RegisterCard() {
-    const spinner = useRef();
+    const spinnerRef = useRef();
+    const swiperRef = useRef();
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(false);
     SwiperCore.use([Navigation]);
 
-    const { formik, FirstPageSchema, SecondPageSchema, validateForm } = useFormValidation(selectedImage);
+    const { formik, FirstPageSchema, SecondPageSchema, validateForm } = useRegisterFormValidation(selectedImage);
 
-    //#region Spinner
-
-    const updateUi = async (value) => {
-        spinner.current.classList.remove("visible");
-
-        const response = await AuthService.CheckUserExists(value);
-
-        if (response) {
-            formik.setFieldError("userName", "Username already exists");
-        } else {
-            formik.errors.email = ""
-        }
-    };
+    //#region spinner
 
     const debounce = (callback, time) => {
         let interval;
@@ -43,25 +34,37 @@ export default function RegisterCard() {
         };
     };
 
+    
+    const checkUsernameExistsandUpdateUI = async (userName) => {
+        spinnerRef.current.classList.remove("visible");
+        const userExists = await AuthService.CheckUserExists(userName);
+        if (userExists) {
+            formik.setFieldError("userName", "Username already exists");
+            return true;
+        }
+        else {
+            formik.setFieldError("userName", "");
+            return false;
+        }
+    };
+
     const handleUsernameChange = useCallback(
         debounce(async (input) => {
+            spinnerRef.current.classList.remove("visible");
             const { value } = input.target;
             formik.values.userName = value;
-
-            await updateUi(value);
+            await checkUsernameExistsandUpdateUI(value);
         }, 500),
-        [updateUi, formik]
+        [formik]
     );
 
     const handleStartTyping = () => {
-        spinner.current.classList.add("visible");
+        spinnerRef.current.classList.add("visible");
     };
 
     //#endregion
 
     //#region Swiper
-
-    const swiperRef = useRef();
 
     const handleNextSlide = async () => {
         const activeIndex = swiperRef.current.activeIndex;
@@ -69,6 +72,11 @@ export default function RegisterCard() {
 
         // For each page, we have different schemas and values to validate
         if (activeIndex === 0) {
+            console.log(formik.errors)
+            // If Username exists, then immediately return
+            if (await checkUsernameExistsandUpdateUI(formik.values.userName)) {
+                return;
+            }
             valuesToValidate = {
                 name: formik.values.name,
                 surname: formik.values.surname,
@@ -116,6 +124,7 @@ export default function RegisterCard() {
             swiperRef.current.slidePrev();
         }
     };
+
     //#endregion
 
     return (
@@ -174,7 +183,7 @@ export default function RegisterCard() {
                             onBlur={formik.handleBlur}
                             value={formik.values.userName}
                         ></input>
-                        <div ref={spinner} className="spinner"></div>
+                        <div ref={spinnerRef} className="spinner"></div>
                         <label className={`text-danger ${formik.errors.userName ? "visible" : ""}`}>
                             {formik.errors.userName}
                         </label>
@@ -215,6 +224,9 @@ export default function RegisterCard() {
                     </div>
 
                     <button className="control" type="button" onClick={handleNextSlide}>Next</button>
+                    <div className="text-center mt-2">
+                        <NavLink to="/auth/login">Already have an account</NavLink>
+                    </div>
                 </SwiperSlide>
 
                 <SwiperSlide>
