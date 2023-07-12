@@ -42,7 +42,7 @@ export async function Register(name, surname, userName, email, profileImage, pas
         formData.append('Password', password);
         formData.append('RetypePassword', retypePassword);
 
-        await fetch('api/User/register', {
+        await fetch('api/Users/register', {
             method: 'POST',
             body: formData
 
@@ -84,7 +84,7 @@ export async function CheckUserExists(userName) {
 export async function SendVerificationCode(recipientEmail) {
     var response;
     try {
-        await fetch('api/Email/sendverificationcode', {
+        await fetch('api/Emails/sendverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ export async function SendVerificationCode(recipientEmail) {
 export async function CheckVerificationCode(email, verificationCode) {
     var response;
     try {
-        await fetch('api/Email/checkverificationcode', {
+        await fetch('api/Emails/checkverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

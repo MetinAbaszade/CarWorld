@@ -36,7 +36,20 @@ namespace AspReactTestApp
                 });
             });
 
+
+            builder.Services.AddScoped<IAutoSalonDal, EfAutoSalonDal>();
+            builder.Services.AddScoped<IBrandDal, EfBrandDal>();
+            builder.Services.AddScoped<ICarDal, EfCarDal>();
+            builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
+            builder.Services.AddScoped<IColorDal, EfColorDal>();
+            builder.Services.AddScoped<ICurrencyDal, EfCurrencyDal>();
+            builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
+            builder.Services.AddScoped<IFueltypeDal, EfFueltypeDal>();
+            builder.Services.AddScoped<IModelDal, EfModelDal>();
+            builder.Services.AddScoped<IRegionDal, EfRegionDal>();
+            builder.Services.AddScoped<ITransmissionDal, EfTransmissionDal>();
             builder.Services.AddScoped<IUserDal, EfUserDal>();
+
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IFileService, FileService>();

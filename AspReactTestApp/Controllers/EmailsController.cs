@@ -10,12 +10,12 @@ namespace AspReactTestApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmailController : ControllerBase
+    public class EmailsController : ControllerBase
     {
 
         private readonly IEmailService _emailService;
 
-        public EmailController(IEmailService emailService)
+        public EmailsController(IEmailService emailService)
         {
             _emailService = emailService;
         }
