@@ -43,9 +43,10 @@ namespace AspReactTestApp.Data
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Model>()
-              .HasOne<Brand>()
+              .HasOne(m => m.Brand)
               .WithMany(b => b.Models)
               .HasForeignKey("BrandId")
+              .OnDelete(DeleteBehavior.Cascade)
               .IsRequired();
 
             modelBuilder.Entity<Model>()

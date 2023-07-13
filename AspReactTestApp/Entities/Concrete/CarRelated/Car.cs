@@ -15,6 +15,7 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
         public Model Model { get; set; }
         public Year Year { get; set; }
         public Region Region { get; set; }
+        public DateTime LastUpdated { get; set; }
         public ushort EngineVolume { get; set; }
         public ushort HorsePower { get; set; }
         public Fueltype Fueltype { get; set; }

@@ -11,11 +11,11 @@ namespace AspReactTestApp.Services.UserService
 {
     public class UserService : IUserService
     {
-        private readonly IUserDal _userDal;
+        private readonly IUserRepository _userDal;
         private readonly IFileService _fileService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserDal userDal, IFileService fileService, IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserRepository userDal, IFileService fileService, IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
             _fileService = fileService;

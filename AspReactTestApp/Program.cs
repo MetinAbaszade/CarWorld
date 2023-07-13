@@ -1,12 +1,16 @@
-
 using AspReactTestApp.Data;
+using AspReactTestApp.Data.Core.Abstract;
+using AspReactTestApp.Data.Core.Concrete.EntityFramework;
 using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
+using AspReactTestApp.Entities.Concrete;
+using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.AuthService;
 using AspReactTestApp.Services.EmailService;
 using AspReactTestApp.Services.FileService;
 using AspReactTestApp.Services.TokenService;
 using AspReactTestApp.Services.UserService;
+using AspReactTestApp.Services.YearService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -37,18 +41,19 @@ namespace AspReactTestApp
             });
 
 
-            builder.Services.AddScoped<IAutoSalonDal, EfAutoSalonDal>();
-            builder.Services.AddScoped<IBrandDal, EfBrandDal>();
-            builder.Services.AddScoped<ICarDal, EfCarDal>();
-            builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
-            builder.Services.AddScoped<IColorDal, EfColorDal>();
-            builder.Services.AddScoped<ICurrencyDal, EfCurrencyDal>();
-            builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
-            builder.Services.AddScoped<IFueltypeDal, EfFueltypeDal>();
-            builder.Services.AddScoped<IModelDal, EfModelDal>();
-            builder.Services.AddScoped<IRegionDal, EfRegionDal>();
-            builder.Services.AddScoped<ITransmissionDal, EfTransmissionDal>();
-            builder.Services.AddScoped<IUserDal, EfUserDal>();
+            builder.Services.AddScoped<IAutoSalonRepository, EfAutoSalonRepository>();
+            builder.Services.AddScoped<IBrandRepository, EfBrandRepository>();
+            builder.Services.AddScoped<ICarRepository, EfCarRepository>();
+            builder.Services.AddScoped<ICategoryRepository, EfCategoryRepository>();
+            builder.Services.AddScoped<IColorRepository, EfColorRepository>();
+            builder.Services.AddScoped<ICurrencyRepository, EfCurrencyRepository>();
+            builder.Services.AddScoped<IFeatureRepository, EfFeatureRepository>();
+            builder.Services.AddScoped<IFueltypeRepository, EfFueltypeRepository>();
+            builder.Services.AddScoped<IModelRepository, EfModelRepository>();
+            builder.Services.AddScoped<IRegionRepository, EfRegionRepository>();
+            builder.Services.AddScoped<ITransmissionRepository, EfTransmissionRepository>();
+            builder.Services.AddScoped<IYearRepository, EfYearRepository>();
+            builder.Services.AddScoped<IUserRepository, EfUserRepository>();
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();

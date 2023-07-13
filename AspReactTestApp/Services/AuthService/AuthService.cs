@@ -17,11 +17,11 @@ namespace AspReactTestApp.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserDal _userDal;
+        private readonly IUserRepository _userDal;
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IUserDal userDal,
+        public AuthService(IUserRepository userDal,
                            ITokenService tokenService,
                            IHttpContextAccessor httpContextAccessor)
         {

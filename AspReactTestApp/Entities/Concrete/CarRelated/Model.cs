@@ -13,6 +13,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
         public string Name { get; set; } = string.Empty;
         public Model BaseModel { get; set; }
 
+        public Brand Brand { get; set; }
+
         public Model() { }
 
         public bool IsBaseModel()
