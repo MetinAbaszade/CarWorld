@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspReactTestApp.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using AspReactTestApp.Services.CarService;
+using AspReactTestApp.Entities.Concrete.CarRelated;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,38 +10,43 @@ namespace AspReactTestApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CarsController : ControllerBase
     {
-      
-        [HttpGet]
-        public IEnumerable<string> GetCarDetails()
+        private readonly ICarService _carService;
+
+        public CarsController(ICarService carService)
         {
-            return new string[] { "value1", "value2" };
+            _carService = carService;
         }
 
+        [HttpPost("addcar")]
+        public async Task<ActionResult<ResponseDto>> AddCar(Car car)
+        {
+            var result = await _carService.AddCar(car);
+            return Ok(result);
+        }
 
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        [HttpDelete("deletecar")]
+        public async Task<ActionResult<ResponseDto>> DeleteCar(int id)
+        {
+            var result = await _carService.RemoveCar(id);
+            return Ok(result);
+        }
 
+        [HttpGet("getcardetails")]
+        public async Task<ActionResult<Car>> GetCarDetails(int id)
+        {
+            var car = await _carService.GetCarDetails(id);
+            return car;
 
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+        }
 
-
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        [HttpGet("getcardetails")]
+        public async Task<ActionResult<List<Car>>> GetCars(int pageNumber, int pageSize = 20, string sort = "")
+        {
+            var carList = await _carService.GetCarsWithPagination(pageNumber, pageSize, sort);
+            return carList;
+        }
     }
 }

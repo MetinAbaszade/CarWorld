@@ -1,10 +1,6 @@
-﻿using AspReactTestApp.DTOs;
-using AspReactTestApp.Services.AuthService;
-using AspReactTestApp.Services.EmailService;
-using AspReactTestApp.Services.UserService;
+﻿using AspReactTestApp.DTOs; 
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using AspReactTestApp.Services.EmailService; 
 
 namespace AspReactTestApp.Controllers
 {
@@ -12,7 +8,6 @@ namespace AspReactTestApp.Controllers
     [ApiController]
     public class EmailsController : ControllerBase
     {
-
         private readonly IEmailService _emailService;
 
         public EmailsController(IEmailService emailService)

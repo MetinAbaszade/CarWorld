@@ -6,7 +6,7 @@ namespace AspReactTestApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CategoriesController : ControllerBase
+    public class ColorController : ControllerBase
     {
     }
 }

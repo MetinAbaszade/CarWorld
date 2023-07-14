@@ -6,9 +6,19 @@ using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
 using AspReactTestApp.Entities.Concrete;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.AuthService;
+using AspReactTestApp.Services.AutoSalonService;
+using AspReactTestApp.Services.BrandService;
+using AspReactTestApp.Services.CarService;
+using AspReactTestApp.Services.CategoryService;
+using AspReactTestApp.Services.ColorService;
 using AspReactTestApp.Services.EmailService;
+using AspReactTestApp.Services.FeatureService;
 using AspReactTestApp.Services.FileService;
+using AspReactTestApp.Services.FueltypeService;
+using AspReactTestApp.Services.ModelService;
+using AspReactTestApp.Services.RegionService;
 using AspReactTestApp.Services.TokenService;
+using AspReactTestApp.Services.TransmissionService;
 using AspReactTestApp.Services.UserService;
 using AspReactTestApp.Services.YearService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -60,9 +70,19 @@ namespace AspReactTestApp
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ITokenService, JwtTokenService>();
+            builder.Services.AddScoped<IAutoSalonService, AutoSalonService>();
+            builder.Services.AddScoped<IBrandService, BrandService>();
+            builder.Services.AddScoped<ICarService, CarService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IColorService, ColorService>(); 
+            builder.Services.AddScoped<IFeatureService, FeatureService>();
+            builder.Services.AddScoped<IModelService, ModelService>();
+            builder.Services.AddScoped<IRegionService, RegionService>();
+            builder.Services.AddScoped<ITransmissionService, TransmissionService>();
+            builder.Services.AddScoped<IYearService, YearService>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-              options.UseSqlServer("Data Source=DESKTOP-G1Q07RP;Initial Catalog=JWTAuthorizationPractiseDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+              options.UseSqlServer("Data Source=METIN-ABASZADE;Initial Catalog=CarUniverse;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSwaggerGen(options =>
@@ -110,6 +130,11 @@ namespace AspReactTestApp
             app.UseStaticFiles();
             app.UseRouting();
 
+            // Place the UseAuthentication middleware here
+            app.UseAuthentication();
+
+            // Place the UseAuthorization middleware here
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",

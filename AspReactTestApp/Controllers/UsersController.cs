@@ -1,7 +1,6 @@
-﻿using AspReactTestApp.DTOs;
-using AspReactTestApp.Services.AuthService;
-using AspReactTestApp.Services.UserService;
+﻿using AspReactTestApp.DTOs; 
 using Microsoft.AspNetCore.Mvc;
+using AspReactTestApp.Services.UserService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

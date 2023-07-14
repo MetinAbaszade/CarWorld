@@ -45,27 +45,27 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Model>()
               .HasOne(m => m.Brand)
               .WithMany(b => b.Models)
-              .HasForeignKey("BrandId")
+              .HasForeignKey(m => m.BrandId)
               .OnDelete(DeleteBehavior.Cascade)
               .IsRequired();
 
             modelBuilder.Entity<Model>()
               .HasMany<Car>()
               .WithOne(c => c.Model)
-              .HasForeignKey("ModelId")
+              .HasForeignKey(c => c.ModelId)
               .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Model>()
               .HasOne(m => m.BaseModel)
               .WithMany()
-              .HasForeignKey("BaseModelId")
+              .HasForeignKey(m => m.BaseModelId)
               .IsRequired(false)
               .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Category>()
               .HasMany<Car>()
               .WithOne(c => c.Category)
-              .HasForeignKey("CategoryId")
+              .HasForeignKey(c => c.CategoryId)
               .OnDelete(DeleteBehavior.Restrict)
               .IsRequired();
 
@@ -86,7 +86,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Region>()
               .HasMany<Car>()
               .WithOne(c => c.Region)
-              .HasForeignKey("RegionId")
+              .HasForeignKey(c => c.RegionId)
               .IsRequired();
 
             modelBuilder.Entity<Region>()
@@ -105,7 +105,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Fueltype>()
               .HasMany<Car>()
               .WithOne(c => c.Fueltype)
-              .HasForeignKey("FueltypeId")
+              .HasForeignKey(c => c.FueltypeId)
               .IsRequired();
 
             modelBuilder.Entity<Fueltype>()
@@ -123,7 +123,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Color>()
               .HasMany<Car>()
               .WithOne(c => c.Color)
-              .HasForeignKey("ColorId")
+              .HasForeignKey(c => c.ColorId)
               .IsRequired();
 
             modelBuilder.Entity<Color>()
@@ -141,13 +141,13 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Currency>()
               .HasMany<Car>()
               .WithOne(c => c.Currency)
-              .HasForeignKey("CurrencyId")
+              .HasForeignKey(c => c.CurrencyId)
               .IsRequired();
 
             modelBuilder.Entity<Transmission>()
               .HasMany<Car>()
               .WithOne(c => c.Transmission)
-              .HasForeignKey("TransmissionId")
+              .HasForeignKey(c => c.TransmissionId)
               .IsRequired();
 
             modelBuilder.Entity<Transmission>()
@@ -165,7 +165,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<Year>()
               .HasMany<Car>()
               .WithOne(c => c.Year)
-              .HasForeignKey("YearId")
+              .HasForeignKey(c => c.YearId)
               .IsRequired();
 
             modelBuilder.Entity<Car>()
@@ -177,7 +177,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<AutoSalon>()
             .HasMany(s => s.Cars)
             .WithOne(c => c.AutoSalon)
-            .HasForeignKey("AutoSalonId");
+            .HasForeignKey(c => c.AutoSalonId);
 
             modelBuilder.Entity<AutoSalon>()
            .HasMany(s => s.AutoSalonLocales)

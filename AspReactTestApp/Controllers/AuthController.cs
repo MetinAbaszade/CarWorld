@@ -1,9 +1,7 @@
 ﻿using AspReactTestApp.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using AspReactTestApp.Services.AuthService;
 using AspReactTestApp.Services.UserService;
-using Azure;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace AspReactTestApp.Controllers
 {
@@ -19,7 +17,6 @@ namespace AspReactTestApp.Controllers
             _authService = authService;
             _userService = userService;
         }
-
 
         [HttpPost("login")]
         public async Task<ActionResult<ResponseDto>> Login(LoginUserDto request)
@@ -81,6 +78,5 @@ namespace AspReactTestApp.Controllers
 
             return NotFound(response);
         }
-
     }
 }
