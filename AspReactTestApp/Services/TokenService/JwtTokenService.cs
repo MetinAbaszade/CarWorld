@@ -12,7 +12,6 @@ namespace AspReactTestApp.Services.TokenService
     {
         private readonly IConfiguration _configuration;
 
-
         public JwtTokenService(IConfiguration configuration)
         {
             _configuration = configuration;

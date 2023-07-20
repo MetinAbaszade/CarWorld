@@ -1,3 +1,7 @@
 export * as AuthService from './AuthService'
+export * as BrandService from './BrandService'
+export * as ColorService from './ColorService'
 export * as CookieService from './CookieService'
 export * as FueltypeService from './FueltypeService'
+export * as RegionService from './RegionService'
+export * as TransmissionService from './TransmissionService'

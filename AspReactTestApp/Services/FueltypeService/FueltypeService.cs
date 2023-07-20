@@ -4,7 +4,7 @@ using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Services.FueltypeService
 {
-    public class FueltypeService
+    public class FueltypeService : IFueltypeService
     {
         private readonly IFueltypeRepository _fueltypeRepository;
 
@@ -56,7 +56,7 @@ namespace AspReactTestApp.Services.FueltypeService
             try
             {
                 var fueltypes = await _fueltypeRepository.GetList(
-                    filter: c => c.FueltypeLocales.Any(fl => fl.Language.LanguageName == language),
+                    filter: c => c.FueltypeLocales.Any(fl => fl.Language.DisplayName == language),
                     orderBy: null,
                     includeProperties: "FueltypeLocales");
                 return fueltypes;

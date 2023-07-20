@@ -56,7 +56,7 @@ namespace AspReactTestApp.Services.RegionService
             try
             {
                 var regions = await _regionRepository.GetList(
-                    filter: c => c.RegionLocales.Any(fl => fl.Language.LanguageName == language),
+                    filter: c => c.RegionLocales.Any(fl => fl.Language.DisplayName == language),
                     orderBy: null,
                     includeProperties: "RegionLocales");
                 return regions;

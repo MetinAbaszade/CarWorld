@@ -50,5 +50,18 @@ namespace AspReactTestApp.Services.ModelService
             }
             return responseDto;
         }
+
+        public async Task<List<Model>> GetModelsByBrandId(int brandId)
+        {
+            try
+            {
+                var modelList = await _modelRepository.GetList(m => m.BrandId == brandId);
+                return modelList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

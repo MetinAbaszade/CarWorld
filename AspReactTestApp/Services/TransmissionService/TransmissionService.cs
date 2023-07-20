@@ -56,7 +56,7 @@ namespace AspReactTestApp.Services.TransmissionService
             try
             {
                 var transmissions = await _transmissionRepository.GetList(
-                    filter: t => t.TransmissionLocales.Any(tl => tl.Language.LanguageName == language),
+                    filter: t => t.TransmissionLocales.Any(tl => tl.Language.DisplayName == language),
                     orderBy: null,
                     includeProperties: "TransmissionLocales");
                 return transmissions;

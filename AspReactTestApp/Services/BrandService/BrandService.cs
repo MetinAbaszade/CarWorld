@@ -58,7 +58,7 @@ namespace AspReactTestApp.Services.BrandService
                 var brands = await _brandRepository.GetList();
                 return brands;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

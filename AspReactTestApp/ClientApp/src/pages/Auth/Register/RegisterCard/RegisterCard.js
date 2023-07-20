@@ -118,7 +118,7 @@ export default function RegisterCard() {
         if (swiperRef.current) {
             const activeIndex = swiperRef.current.activeIndex;
 
-            if (activeIndex == 2) {
+            if (activeIndex === 2) {
                 formik.setFieldValue('verificationCode', new Array(6).fill(''));
             }
             swiperRef.current.slidePrev();

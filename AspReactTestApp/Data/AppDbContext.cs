@@ -2,6 +2,7 @@
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using TurboazFetching.Entities;
 
 namespace AspReactTestApp.Data
 {
@@ -207,6 +208,27 @@ namespace AspReactTestApp.Data
             #endregion
         }
 
-        public DbSet<User> Users => Set<User>();
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Year> Years { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Model> Models { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<Feature> Features { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Fueltype> Fueltypes { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<AutoSalon> AutoSalons { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<ColorLocale> ColorLocales { get; set; }
+        public DbSet<Transmission> Transmissions { get; set; }
+        public DbSet<RegionLocale> RegionLocales { get; set; }
+        public DbSet<FueltypeLocale> FueltypeLocales { get; set; }
+        public DbSet<CategoryLocale> CategoryLocales { get; set; }
+        public DbSet<AutoSalonLocale> AutoSalonLocales { get; set; }
+        public DbSet<TransmissionLocale> TransmissionLocales { get; set; }
+        public DbSet<FeatureLocale> FeatureLocales { get; set; }
     }
 }

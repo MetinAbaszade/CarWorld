@@ -7,5 +7,6 @@ namespace AspReactTestApp.Services.ModelService
     {
         public Task<ResponseDto> AddModel(Model model);
         public Task<ResponseDto> RemoveModelById(int Id);
+        public Task<List<Model>> GetModelsByBrandId(int brandId);
     }
 }

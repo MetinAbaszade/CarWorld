@@ -56,7 +56,7 @@ namespace AspReactTestApp.Services.FeatureService
             try
             {
                 var features = await _featureRepository.GetList(
-                    filter: c => c.FeatureLocales.Any(fl => fl.Language.LanguageName == language),
+                    filter: c => c.FeatureLocales.Any(fl => fl.Language.DisplayName == language),
                     orderBy: null,
                     includeProperties: "FeatureLocales");
                 return features;

@@ -8,9 +8,5 @@ namespace AspReactTestApp.Data.DataAccess.Concrete.EntityFramework
     public class EfBrandRepository : EfGenericRepository<Brand, AppDbContext>, IBrandRepository
     {
 
-        public void Test<Tentity>()
-        {
-
-        }
     }
 }

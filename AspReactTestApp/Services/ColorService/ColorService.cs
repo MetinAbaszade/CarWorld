@@ -60,7 +60,7 @@ namespace AspReactTestApp.Services.ColorService
             try
             {
                 var colors = await _colorRepository.GetList(
-                    filter: c => c.ColorLocales.Any(cl => cl.Language.LanguageName == language),
+                    filter: c => c.ColorLocales.Any(cl => cl.Language.DisplayName == language),
                     orderBy: null,
                     includeProperties: "ColorLocales");
                 return colors;

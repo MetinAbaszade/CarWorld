@@ -1,9 +1,9 @@
 
 
-export async function GetFueltypes() {
+export async function GetColors() {
     var response;
     try {
-        await fetch('api/Fueltype/getfueltypes', {
+        await fetch('api/Color/getcolors', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -15,12 +15,12 @@ export async function GetFueltypes() {
                 console.log(authResponse);
                 response = authResponse;
             }).catch(error => {
-                console.error('Error occured while fetching fueltypes:', error.message);
+                console.error('Error occured while fetching colors:', error.message);
             });
 
         return response;
     }
     catch (error) {
-        console.log('Error occured while fetching fueltypes: ' + error.message);
+        console.log('Error occured while fetching colors: ' + error.message);
     }
 }

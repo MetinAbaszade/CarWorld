@@ -23,10 +23,12 @@ using AspReactTestApp.Services.UserService;
 using AspReactTestApp.Services.YearService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace AspReactTestApp
 {
@@ -37,7 +39,10 @@ namespace AspReactTestApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             builder.Services.AddCors(options =>
             {
@@ -76,13 +81,14 @@ namespace AspReactTestApp
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IColorService, ColorService>(); 
             builder.Services.AddScoped<IFeatureService, FeatureService>();
+            builder.Services.AddScoped<IFueltypeService, FueltypeService>();
             builder.Services.AddScoped<IModelService, ModelService>();
             builder.Services.AddScoped<IRegionService, RegionService>();
             builder.Services.AddScoped<ITransmissionService, TransmissionService>();
             builder.Services.AddScoped<IYearService, YearService>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-              options.UseSqlServer("Data Source=METIN-ABASZADE;Initial Catalog=CarUniverse;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+              options.UseSqlServer("Data Source=DESKTOP-G1Q07RP;Initial Catalog=CarUniverse;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSwaggerGen(options =>
@@ -105,11 +111,24 @@ namespace AspReactTestApp
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                        .GetBytes(builder.Configuration.GetSection("Appsettings:Token").Value)),
+                                   .GetBytes(builder.Configuration.GetSection("Appsettings:Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.Request.Cookies.ContainsKey("access_token"))
+                            {
+                                context.Token = context.Request.Cookies["access_token"];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
+
 
             builder.Services.AddMemoryCache();
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspReactTestApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230714123956_init")]
+    [Migration("20230714195934_init")]
     partial class init
     {
         /// <inheritdoc />
