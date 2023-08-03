@@ -1,26 +1,26 @@
 
 
 export async function GetTransmissions() {
-    var response;
     try {
-        await fetch('api/Transmission/gettransmissions', {
+        const response = await fetch('api/Transmission/gettransmissions', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
+        });
 
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while fetching transmissions:', error.message);
-            });
+        if (!response.ok) {
+            let error = new Error(`HTTP error! status: ${response.status}`);
+            error.status = response.status;
+            throw error;
+        }
 
-        return response;
+        const authResponse = await response.json();
+        return authResponse.$values;
     }
     catch (error) {
-        console.log('Error occured while fetching transmissions: ' + error.message);
+        console.error('Error occurred while fetching Transmissions:', error.message);
+        throw error;
     }
 }

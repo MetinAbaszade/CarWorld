@@ -4,6 +4,7 @@ using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.FueltypeService;
 using AspReactTestApp.Services.RegionService;
+using AspReactTestApp.Dto;
 
 namespace AspReactTestApp.Controllers
 {
@@ -34,7 +35,7 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpGet("getregions")]
-        public async Task<ActionResult<List<Region>>> GetRegions()
+        public async Task<ActionResult<List<GenericEntityDto>>> GetRegions()
         {
             var regionList = await _regionService.GetAllRegions();
             return regionList;

@@ -11,10 +11,11 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class CategoryLocale : IEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int LanguageId { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public Language Language { get; set; }
-        public Category Category { get; set; }
+        public Language? Language { get; set; }
+        public Category? Category { get; set; }
 
         public CategoryLocale() { }
     }

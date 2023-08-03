@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace AspReactTestApp.Entities.Concrete.CarRelated
 {
-    public class Fueltype : IEntity
+    public class FuelType : IEntity
     {
         public int Id { get; set; }
-        public List<FueltypeLocale> FueltypeLocales { get; set; } = new();
 
-        public Fueltype() { }
+        public List<FuelTypeLocale>? FuelTypeLocales { get; set; } 
+
+        public FuelType() { }
     }
 }

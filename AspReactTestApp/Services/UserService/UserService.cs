@@ -60,6 +60,8 @@ namespace AspReactTestApp.Services.UserService
             var user = new User()
             {
                 Name = request.Name,
+                Email = request.Email,
+                Number = "My Number",
                 Surname = request.Surname,
                 UserName = request.UserName,
                 ProfileImageUrl = profileImageUrl,

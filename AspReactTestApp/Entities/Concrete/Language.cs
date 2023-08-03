@@ -11,16 +11,18 @@ namespace TurboazFetching.Entities
     public class Language : IEntity
     {
         public int Id { get; set; }
-        public string LanguageName { get; set; }
-        public string DisplayName { get; set; }
+        public string LanguageName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
 
 
-        public List<ColorLocale> ColorLocales { get; set; }
-        public List<RegionLocale> RegionLocales { get; set; }
-        public List<FeatureLocale> FeatureLocales { get; set; }
-        public List<FueltypeLocale> FueltypeLocales { get; set; }
-        public List<CategoryLocale> CategoryLocales { get; set; }
-        public List<AutoSalonLocale> AutoSalonLocales { get; set; }
-        public List<TransmissionLocale> TransmissionLocales { get; set; }
+        public List<ColorLocale>? ColorLocales { get; set; }
+        public List<RegionLocale>? RegionLocales { get; set; }
+        public List<MarketLocale>? MarketLocales { get; set; }
+        public List<FeatureLocale>? FeatureLocales { get; set; }
+        public List<FuelTypeLocale>? FuelTypeLocales { get; set; }
+        public List<CategoryLocale>? CategoryLocales { get; set; }
+        public List<GearTypeLocale>? GearTypeLocales { get; set; }
+        public List<AutoSalonLocale>? AutoSalonLocales { get; set; }
+        public List<TransmissionLocale>? TransmissionLocales { get; set; }
     }
 }

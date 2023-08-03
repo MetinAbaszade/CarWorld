@@ -1,16 +1,21 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspReactTestApp.Services.FeatureService
 {
     public class FeatureService : IFeatureService
     {
         private readonly IFeatureRepository _featureRepository;
+        private readonly IMapper _mapper;
 
-        public FeatureService(IFeatureRepository featureRepository)
+        public FeatureService(IFeatureRepository featureRepository, IMapper mapper)
         {
             _featureRepository = featureRepository;
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto> AddFeature(Feature feature)
@@ -51,15 +56,17 @@ namespace AspReactTestApp.Services.FeatureService
             return responseDto;
         }
 
-        public async Task<List<Feature>> GetAllFeatures(string language)
+        public async Task<List<GenericEntityDto>> GetAllFeatures(string language)
         {
             try
             {
                 var features = await _featureRepository.GetList(
                     filter: c => c.FeatureLocales.Any(fl => fl.Language.DisplayName == language),
                     orderBy: null,
-                    includeProperties: "FeatureLocales");
-                return features;
+                    include: source => source.Include(f => f.FeatureLocales));
+
+                List<GenericEntityDto> featureDtos = _mapper.Map<List<GenericEntityDto>>(features);
+                return featureDtos;
             }
             catch (Exception ex)
             {

@@ -1,0 +1,33 @@
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  left: 15px;
+  top: 10px;
+  background-color: white;
+  transition: 0.2s ease all;
+  z-index: 1!important;
+  border: 0;
+}
+
+.floating-label.active {
+  top: -17px;
+  left: 8px;
+  font-size: 15px;
+  font-weight:500;
+  color: black;
+  background-color: rgb(244 244 245);
+  padding: 0 10px 0 10px;
+  border-radius: 5px; 
+}
+
+#options {
+  position: absolute;
+  z-index: 1!important;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add this for a box shadow */
+  top: 40px; /* Adjust this value to align the dropdown with the select input */
+  overflow: auto;
+}
+
+#options::-webkit-scrollbar {
+  display: none;
+}

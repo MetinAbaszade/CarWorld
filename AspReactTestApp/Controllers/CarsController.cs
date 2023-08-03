@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Services.CarService;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AspReactTestApp.Dto;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,19 +35,18 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getcardetails")]
-        public async Task<ActionResult<Car>> GetCarDetails(int id)
+        [HttpPost("getcardetails")]
+        public async Task<ActionResult<CarDetailsDto>> GetCarDetails(int id)
         {
-            var car = await _carService.GetCarDetails(id);
-            return car;
-
+            var carDetailsDto = await _carService.GetCarDetails(id);
+            return carDetailsDto;
         }
 
-        [HttpGet("getcardetails")]
-        public async Task<ActionResult<List<Car>>> GetCars(int pageNumber, int pageSize = 20, string sort = "")
+        [HttpPost("getcars")]
+        public async Task<ActionResult<List<CarDto>>> GetCars(int pageNumber = 1, int pageSize = 100)
         {
-            var carList = await _carService.GetCarsWithPagination(pageNumber, pageSize, sort);
-            return carList;
+            var carDtoList = await _carService.GetCarsWithPagination("", pageNumber, pageSize);
+            return carDtoList;
         }
     }
 }

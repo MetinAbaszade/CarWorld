@@ -11,15 +11,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Category : IEntity
     {
         public int Id { get; set; }
-        public Image Image { get; set; }
-        public List<CategoryLocale> CategoryLocales { get; set; } = new();
+        public List<CategoryLocale>? CategoryLocales { get; set; }
 
         public Category() { }
-
-        public Category(int ıd, CategoryLocale categoryLocale, Image ımage)
-        {
-            Id = ıd;
-            Image = ımage;
-        }
     }
 }

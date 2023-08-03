@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.TransmissionService;
+using AspReactTestApp.Dto;
 
 namespace AspReactTestApp.Controllers
 {
@@ -33,7 +34,7 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpGet("gettransmissions")]
-        public async Task<ActionResult<List<Transmission>>> GetTransmissions()
+        public async Task<ActionResult<List<GenericEntityDto>>> GetTransmissions()
         {
             var transmissionList = await _transmissionService.GetAllTransmissions();
             return transmissionList;

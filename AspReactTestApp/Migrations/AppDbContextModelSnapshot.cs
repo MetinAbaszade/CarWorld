@@ -51,7 +51,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AutoSalon");
+                    b.ToTable("AutoSalons");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.AutoSalonLocale", b =>
@@ -86,7 +86,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("AutoSalonLocale");
+                    b.ToTable("AutoSalonLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Brand", b =>
@@ -103,7 +103,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Car", b =>
@@ -114,7 +114,7 @@ namespace AspReactTestApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AutoSalonId")
+                    b.Property<int?>("AutoSalonId")
                         .HasColumnType("int");
 
                     b.Property<bool>("BarterAvailable")
@@ -129,20 +129,22 @@ namespace AspReactTestApp.Migrations
                     b.Property<int>("ColorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("CreditAvailable")
                         .HasColumnType("bit");
 
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EngineVolume")
                         .HasColumnType("int");
 
                     b.Property<int>("FueltypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GearTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("HorsePower")
@@ -151,22 +153,34 @@ namespace AspReactTestApp.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("MarketId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Mileage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MileageTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("RegionId")
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReleaseYearId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeatCount")
                         .HasColumnType("int");
 
                     b.Property<int>("TransmissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -183,15 +197,23 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("FueltypeId");
 
+                    b.HasIndex("GearTypeId");
+
+                    b.HasIndex("MarketId");
+
+                    b.HasIndex("MileageTypeId");
+
                     b.HasIndex("ModelId");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("RegionId");
 
+                    b.HasIndex("ReleaseYearId");
+
                     b.HasIndex("TransmissionId");
 
-                    b.HasIndex("YearId");
-
-                    b.ToTable("Car");
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Category", b =>
@@ -202,14 +224,9 @@ namespace AspReactTestApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.CategoryLocale", b =>
@@ -236,7 +253,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("CategoryLocale");
+                    b.ToTable("CategoryLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Color", b =>
@@ -249,7 +266,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Color");
+                    b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.ColorLocale", b =>
@@ -276,7 +293,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("ColorLocale");
+                    b.ToTable("ColorLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Currency", b =>
@@ -293,7 +310,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currency");
+                    b.ToTable("Currencies");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Feature", b =>
@@ -306,7 +323,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feature");
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FeatureLocale", b =>
@@ -317,7 +334,7 @@ namespace AspReactTestApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FeatureId")
+                    b.Property<int?>("FeatureId")
                         .HasColumnType("int");
 
                     b.Property<int>("LanguageId")
@@ -333,10 +350,10 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("FeatureLocale");
+                    b.ToTable("FeatureLocales");
                 });
 
-            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Fueltype", b =>
+            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FuelType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -346,10 +363,10 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fueltype");
+                    b.ToTable("FuelTypes");
                 });
 
-            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FueltypeLocale", b =>
+            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FuelTypeLocale", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -373,7 +390,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("FueltypeLocale");
+                    b.ToTable("FuelTypeLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Model", b =>
@@ -400,7 +417,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Model");
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Region", b =>
@@ -413,7 +430,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Region");
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.RegionLocale", b =>
@@ -440,7 +457,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("RegionLocale");
+                    b.ToTable("RegionLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Transmission", b =>
@@ -453,7 +470,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transmission");
+                    b.ToTable("Transmissions");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.TransmissionLocale", b =>
@@ -480,7 +497,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("TransmissionId");
 
-                    b.ToTable("TransmissionLocale");
+                    b.ToTable("TransmissionLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Year", b =>
@@ -496,7 +513,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Year");
+                    b.ToTable("Years");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.User", b =>
@@ -507,7 +524,15 @@ namespace AspReactTestApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -562,6 +587,46 @@ namespace AspReactTestApp.Migrations
                     b.ToTable("CarFeature");
                 });
 
+            modelBuilder.Entity("TurboazFetching.Entities.GearType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GearTypes");
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.GearTypeLocale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GearTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GearTypeId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("GearTypeLocales");
+                });
+
             modelBuilder.Entity("TurboazFetching.Entities.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -581,7 +646,7 @@ namespace AspReactTestApp.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("TurboazFetching.Entities.Language", b =>
@@ -602,7 +667,64 @@ namespace AspReactTestApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language");
+                    b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.Market", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Markets");
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.MarketLocale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MarketId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("MarketId");
+
+                    b.ToTable("MarketLocales");
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.MileageType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MileageTypes");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.AutoSalonLocale", b =>
@@ -628,9 +750,7 @@ namespace AspReactTestApp.Migrations
                 {
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.AutoSalon", "AutoSalon")
                         .WithMany("Cars")
-                        .HasForeignKey("AutoSalonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AutoSalonId");
 
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Brand", "Brand")
                         .WithMany()
@@ -656,9 +776,27 @@ namespace AspReactTestApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Fueltype", "Fueltype")
+                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.FuelType", "Fueltype")
                         .WithMany()
                         .HasForeignKey("FueltypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TurboazFetching.Entities.GearType", "GearType")
+                        .WithMany()
+                        .HasForeignKey("GearTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TurboazFetching.Entities.Market", "Market")
+                        .WithMany()
+                        .HasForeignKey("MarketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TurboazFetching.Entities.MileageType", "MileageType")
+                        .WithMany()
+                        .HasForeignKey("MileageTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -668,21 +806,23 @@ namespace AspReactTestApp.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("AspReactTestApp.Entities.Concrete.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("RegionId")
+                        .HasForeignKey("RegionId");
+
+                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Year", "Year")
+                        .WithMany()
+                        .HasForeignKey("ReleaseYearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Transmission", "Transmission")
                         .WithMany()
                         .HasForeignKey("TransmissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Year", "Year")
-                        .WithMany()
-                        .HasForeignKey("YearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -698,24 +838,21 @@ namespace AspReactTestApp.Migrations
 
                     b.Navigation("Fueltype");
 
+                    b.Navigation("GearType");
+
+                    b.Navigation("Market");
+
+                    b.Navigation("MileageType");
+
                     b.Navigation("Model");
+
+                    b.Navigation("Owner");
 
                     b.Navigation("Region");
 
                     b.Navigation("Transmission");
 
                     b.Navigation("Year");
-                });
-
-            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Category", b =>
-                {
-                    b.HasOne("TurboazFetching.Entities.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.CategoryLocale", b =>
@@ -760,9 +897,7 @@ namespace AspReactTestApp.Migrations
                 {
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Feature", "Feature")
                         .WithMany("FeatureLocales")
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FeatureId");
 
                     b.HasOne("TurboazFetching.Entities.Language", "Language")
                         .WithMany("FeatureLocales")
@@ -775,21 +910,21 @@ namespace AspReactTestApp.Migrations
                     b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FueltypeLocale", b =>
+            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FuelTypeLocale", b =>
                 {
-                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Fueltype", "Fueltype")
-                        .WithMany("FueltypeLocales")
+                    b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.FuelType", "FuelType")
+                        .WithMany("FuelTypeLocales")
                         .HasForeignKey("FueltypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TurboazFetching.Entities.Language", "Language")
-                        .WithMany("FueltypeLocales")
+                        .WithMany("FuelTypeLocales")
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Fueltype");
+                    b.Navigation("FuelType");
 
                     b.Navigation("Language");
                 });
@@ -865,6 +1000,25 @@ namespace AspReactTestApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TurboazFetching.Entities.GearTypeLocale", b =>
+                {
+                    b.HasOne("TurboazFetching.Entities.GearType", "GearType")
+                        .WithMany("GearTypeLocales")
+                        .HasForeignKey("GearTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TurboazFetching.Entities.Language", "Language")
+                        .WithMany("GearTypeLocales")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GearType");
+
+                    b.Navigation("Language");
+                });
+
             modelBuilder.Entity("TurboazFetching.Entities.Image", b =>
                 {
                     b.HasOne("AspReactTestApp.Entities.Concrete.CarRelated.Car", null)
@@ -872,6 +1026,25 @@ namespace AspReactTestApp.Migrations
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.MarketLocale", b =>
+                {
+                    b.HasOne("TurboazFetching.Entities.Language", "Language")
+                        .WithMany("MarketLocales")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TurboazFetching.Entities.Market", "Market")
+                        .WithMany("MarketLocales")
+                        .HasForeignKey("MarketId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Market");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.AutoSalon", b =>
@@ -906,9 +1079,9 @@ namespace AspReactTestApp.Migrations
                     b.Navigation("FeatureLocales");
                 });
 
-            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Fueltype", b =>
+            modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.FuelType", b =>
                 {
-                    b.Navigation("FueltypeLocales");
+                    b.Navigation("FuelTypeLocales");
                 });
 
             modelBuilder.Entity("AspReactTestApp.Entities.Concrete.CarRelated.Region", b =>
@@ -921,6 +1094,11 @@ namespace AspReactTestApp.Migrations
                     b.Navigation("TransmissionLocales");
                 });
 
+            modelBuilder.Entity("TurboazFetching.Entities.GearType", b =>
+                {
+                    b.Navigation("GearTypeLocales");
+                });
+
             modelBuilder.Entity("TurboazFetching.Entities.Language", b =>
                 {
                     b.Navigation("AutoSalonLocales");
@@ -931,11 +1109,20 @@ namespace AspReactTestApp.Migrations
 
                     b.Navigation("FeatureLocales");
 
-                    b.Navigation("FueltypeLocales");
+                    b.Navigation("FuelTypeLocales");
+
+                    b.Navigation("GearTypeLocales");
+
+                    b.Navigation("MarketLocales");
 
                     b.Navigation("RegionLocales");
 
                     b.Navigation("TransmissionLocales");
+                });
+
+            modelBuilder.Entity("TurboazFetching.Entities.Market", b =>
+                {
+                    b.Navigation("MarketLocales");
                 });
 #pragma warning restore 612, 618
         }

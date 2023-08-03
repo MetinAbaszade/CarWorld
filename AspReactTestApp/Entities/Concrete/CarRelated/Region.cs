@@ -10,7 +10,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Region : IEntity
     {
         public int Id { get; set; }
-        public List<RegionLocale> RegionLocales { get; set; } = new();
+
+        public List<RegionLocale>? RegionLocales { get; set; }
 
         public Region() { }
     }

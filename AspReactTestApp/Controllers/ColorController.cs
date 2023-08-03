@@ -1,4 +1,5 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.Dto;
+using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.CategoryService;
 using AspReactTestApp.Services.ColorService;
@@ -34,7 +35,7 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpGet("getcolors")]
-        public async Task<ActionResult<List<Color>>> GetColors()
+        public async Task<ActionResult<List<GenericEntityDto>>> GetColors()
         {
             var colorsList = await _colorService.GetAllColors();
             return colorsList;

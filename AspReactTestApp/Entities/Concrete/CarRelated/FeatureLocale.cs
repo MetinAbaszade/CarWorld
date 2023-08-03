@@ -11,10 +11,11 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class FeatureLocale : IEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int LanguageId { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public Feature Feature { get; set; }
-        public Language Language { get; set; }
+        public Feature? Feature { get; set; }
+        public Language? Language { get; set; }
 
         public FeatureLocale() { }
     }

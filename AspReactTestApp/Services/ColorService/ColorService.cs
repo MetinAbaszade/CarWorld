@@ -1,8 +1,11 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
+using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 
 namespace AspReactTestApp.Services.ColorService
@@ -10,10 +13,12 @@ namespace AspReactTestApp.Services.ColorService
     public class ColorService : IColorService
     {
         private readonly IColorRepository _colorRepository;
+        private readonly IMapper _mapper;
 
-        public ColorService(IColorRepository colorRepository)
+        public ColorService(IColorRepository colorRepository, IMapper mapper)
         {
             _colorRepository = colorRepository;
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto> AddColor(Entities.Concrete.CarRelated.Color color)
@@ -55,15 +60,17 @@ namespace AspReactTestApp.Services.ColorService
             return responseDto;
         }
 
-        public async Task<List<Entities.Concrete.CarRelated.Color>> GetAllColors(string language)
+        public async Task<List<GenericEntityDto>> GetAllColors(string language)
         {
             try
             {
                 var colors = await _colorRepository.GetList(
                     filter: c => c.ColorLocales.Any(cl => cl.Language.DisplayName == language),
                     orderBy: null,
-                    includeProperties: "ColorLocales");
-                return colors;
+                    include: source => source.Include(c => c.ColorLocales));
+
+                List<GenericEntityDto> colorDtos = _mapper.Map<List<GenericEntityDto>>(colors);
+                return colorDtos;
             }
             catch (Exception ex)
             {

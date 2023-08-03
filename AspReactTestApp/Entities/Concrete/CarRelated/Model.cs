@@ -14,8 +14,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
         public int BrandId { get; set; }
         public int? BaseModelId { get; set; }
 
-        public Model BaseModel { get; set; }
-        public Brand Brand { get; set; }
+        public Brand? Brand { get; set; }
+        public Model? BaseModel { get; set; }
 
         public Model() { }
 

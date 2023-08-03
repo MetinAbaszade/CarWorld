@@ -27,7 +27,7 @@ export default function useLoginFormValidation() {
                 formik.setErrors(errorModel);
                 return;
             }
-            navigate("/Profile");
+            navigate("/");
         },
     });
 

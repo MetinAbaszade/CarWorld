@@ -11,10 +11,11 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class ColorLocale : IEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int LanguageId { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public Color Color { get; set; }
-        public Language Language { get; set; }
+        public Color? Color { get; set; }
+        public Language? Language { get; set; }
 
         public ColorLocale() { }
     }

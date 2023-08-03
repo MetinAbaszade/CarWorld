@@ -1,5 +1,6 @@
 export * as AuthService from './AuthService'
 export * as BrandService from './BrandService'
+export * as CarService from './CarService'
 export * as ColorService from './ColorService'
 export * as CookieService from './CookieService'
 export * as FueltypeService from './FueltypeService'

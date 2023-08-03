@@ -1,4 +1,5 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.Dto;
+using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Services.TransmissionService
@@ -7,6 +8,6 @@ namespace AspReactTestApp.Services.TransmissionService
     {
         public Task<ResponseDto> AddTransmission(Transmission transmission);
         public Task<ResponseDto> RemoveTransmissionById(int Id);
-        public Task<List<Transmission>> GetAllTransmissions(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllTransmissions(string language = "Az");
     }
 }

@@ -1,26 +1,26 @@
 
 
 export async function GetFueltypes() {
-    var response;
     try {
-        await fetch('api/Fueltype/getfueltypes', {
+        const response = await fetch('api/Fueltype/getfueltypes', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
+        });
 
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while fetching fueltypes:', error.message);
-            });
+        if (!response.ok) {
+            let error = new Error(`HTTP error! status: ${response.status}`);
+            error.status = response.status;
+            throw error;
+        }
 
-        return response;
+        const authResponse = await response.json();
+        return authResponse.$values;
     }
     catch (error) {
-        console.log('Error occured while fetching fueltypes: ' + error.message);
+        console.error('Error occurred while fetching FuelTypes:', error.message);
+        throw error;
     }
 }

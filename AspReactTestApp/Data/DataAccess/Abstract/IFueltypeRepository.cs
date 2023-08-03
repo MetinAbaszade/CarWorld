@@ -3,7 +3,7 @@ using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Data.DataAccess.Abstract
 {
-    public interface IFueltypeRepository : IGenericRepository<Fueltype>
+    public interface IFuelTypeRepository : IGenericRepository<FuelType>
     {
     }
 }

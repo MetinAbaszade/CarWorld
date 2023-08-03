@@ -10,13 +10,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Currency : IEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public Currency() { }
-
-        public Currency(string name)
-        {
-            Name = name;
-        }
     }
 }

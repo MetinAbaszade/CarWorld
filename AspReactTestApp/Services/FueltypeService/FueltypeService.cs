@@ -1,26 +1,31 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspReactTestApp.Services.FueltypeService
 {
-    public class FueltypeService : IFueltypeService
+    public class FuelTypeService : IFuelTypeService
     {
-        private readonly IFueltypeRepository _fueltypeRepository;
+        private readonly IFuelTypeRepository _fuelTypeRepository;
+        private readonly IMapper _mapper;
 
-        public FueltypeService(IFueltypeRepository fueltypeRepository)
+        public FuelTypeService(IFuelTypeRepository fuelTypeRepository, IMapper mapper)
         {
-            _fueltypeRepository = fueltypeRepository;
+            _fuelTypeRepository = fuelTypeRepository;
+            _mapper = mapper;
         }
 
-        public async Task<ResponseDto> AddFueltype(Fueltype fueltype)
+        public async Task<ResponseDto> AddFuelType(FuelType fuelType)
         {
             ResponseDto responseDto = new();
             try
             {
-                await _fueltypeRepository.Add(fueltype);
+                await _fuelTypeRepository.Add(fuelType);
                 responseDto.IsSuccessfull = true;
-                responseDto.Message = "Fueltype Added Successfully!";
+                responseDto.Message = "FuelType Added Successfully!";
             }
             catch (Exception ex)
             {
@@ -29,20 +34,20 @@ namespace AspReactTestApp.Services.FueltypeService
             return responseDto;
         }
 
-        public async Task<ResponseDto> RemoveFueltypeById(int id)
+        public async Task<ResponseDto> RemoveFuelTypeById(int id)
         {
             ResponseDto responseDto = new();
             try
             {
-                var feature = await _fueltypeRepository.Get(ft => ft.Id == id);
-                if (feature != null)
+                var fuelType = await _fuelTypeRepository.Get(ft => ft.Id == id);
+                if (fuelType != null)
                 {
-                    await _fueltypeRepository.Delete(feature);
-                    responseDto.Message = "Fueltype Not Found!";
+                    await _fuelTypeRepository.Delete(fuelType);
+                    responseDto.Message = "FuelType Not Found!";
                     return responseDto;
                 }
                 responseDto.IsSuccessfull = true;
-                responseDto.Message = "Fueltype Removed Successfully!";
+                responseDto.Message = "FuelType Removed Successfully!";
             }
             catch (Exception ex)
             {
@@ -51,15 +56,17 @@ namespace AspReactTestApp.Services.FueltypeService
             return responseDto;
         }
 
-        public async Task<List<Fueltype>> GetAllFueltypes(string language)
+        public async Task<List<GenericEntityDto>> GetAllFuelTypes(string language)
         {
             try
             {
-                var fueltypes = await _fueltypeRepository.GetList(
-                    filter: c => c.FueltypeLocales.Any(fl => fl.Language.DisplayName == language),
+                var fuelTypes = await _fuelTypeRepository.GetList(
+                    filter: ft => ft.FuelTypeLocales.Any(ftl => ftl.Language.DisplayName == language),
                     orderBy: null,
-                    includeProperties: "FueltypeLocales");
-                return fueltypes;
+                    include: source => source.Include(ft => ft.FuelTypeLocales));
+
+                List<GenericEntityDto> furlTypeDtos = _mapper.Map<List<GenericEntityDto>>(fuelTypes);
+                return furlTypeDtos;
             }
             catch (Exception ex)
             {

@@ -3,40 +3,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Services.FueltypeService;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AspReactTestApp.Dto;
 
 namespace AspReactTestApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class FueltypeController : ControllerBase
+    public class FuelTypeController : ControllerBase
     {
-        private readonly IFueltypeService _fueltypeService;
+        private readonly IFuelTypeService _fuelTypeService;
 
-        public FueltypeController(IFueltypeService fueltypeService)
+        public FuelTypeController(IFuelTypeService fuelTypeService)
         {
-            _fueltypeService = fueltypeService;
+            _fuelTypeService = fuelTypeService;
         }
 
         [HttpPost("addfueltype")]
-        public async Task<ActionResult<ResponseDto>> AddFuelType(Fueltype fueltype)
+        public async Task<ActionResult<ResponseDto>> AddFuelType(FuelType fuelType)
         {
-            var result = await _fueltypeService.AddFueltype(fueltype);
+            var result = await _fuelTypeService.AddFuelType(fuelType);
             return Ok(result);
         }
 
         [HttpDelete("deletefueltype")]
         public async Task<ActionResult<ResponseDto>> DeleteFuelType(int id)
         {
-            var result = await _fueltypeService.RemoveFueltypeById(id);
+            var result = await _fuelTypeService.RemoveFuelTypeById(id);
             return Ok(result);
         }
 
         [HttpGet("getfueltypes")]
-        public async Task<ActionResult<List<Fueltype>>> GetFuelTypes()
+        public async Task<ActionResult<List<GenericEntityDto>>> GetFuelTypes()
         {
-            var fueltypeList = await _fueltypeService.GetAllFueltypes();
-            return fueltypeList;
+            var fuelTypeList = await _fuelTypeService.GetAllFuelTypes();
+            return fuelTypeList;
         }
     }
 }

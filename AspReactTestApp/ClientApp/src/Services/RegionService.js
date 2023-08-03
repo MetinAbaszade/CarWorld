@@ -1,26 +1,27 @@
 
 
 export async function GetRegions() {
-    var response;
     try {
-        await fetch('api/Region/getregions', {
+        const response = await fetch('api/Region/getregions', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
 
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while fetching regions:', error.message);
-            });
+        })
 
-        return response;
+        if (!response.ok) {
+            let error = new Error(`HTTP error! status: ${response.status}`);
+            error.status = response.status;
+            throw error;
+        }
+
+        const authResponse = await response.json();
+        return authResponse.$values;
     }
     catch (error) {
-        console.log('Error occured while fetching regions: ' + error.message);
+        console.error('Error occurred while fetching Regions:', error.message);
+        throw error;
     }
 }

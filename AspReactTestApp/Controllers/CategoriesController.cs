@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Services.CategoryService; 
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AspReactTestApp.Dto;
 
 namespace AspReactTestApp.Controllers
 {
@@ -33,7 +34,7 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpGet("getcategories")]
-        public async Task<ActionResult<List<Category>>> GetCategories()
+        public async Task<ActionResult<List<GenericEntityDto>>> GetCategories()
         {
             var categoriesList = await _categoryService.GetAllCategories();
             return categoriesList;

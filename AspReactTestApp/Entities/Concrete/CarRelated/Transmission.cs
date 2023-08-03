@@ -10,7 +10,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Transmission : IEntity
     {
         public int Id { get; set; }
-        public List<TransmissionLocale> TransmissionLocales { get; set; } = new();
+
+        public List<TransmissionLocale>? TransmissionLocales { get; set; }
 
         public Transmission() { }
     }

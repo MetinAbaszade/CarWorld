@@ -142,6 +142,12 @@ namespace AspReactTestApp.Services.AuthService
             );
         }
 
+        public bool IsUserAuthenticated()
+        {
+            var user = _httpContextAccessor.HttpContext.User;
+            return user?.Identity?.IsAuthenticated ?? false;
+        }
+
         // VerifyPasswordHash method to check if a given password matches the stored hash and salt
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
@@ -151,7 +157,6 @@ namespace AspReactTestApp.Services.AuthService
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
-
     }
 }
 

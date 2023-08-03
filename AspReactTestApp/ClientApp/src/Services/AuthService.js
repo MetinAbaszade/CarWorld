@@ -81,6 +81,22 @@ export async function CheckUserExists(userName) {
     }
 }
 
+export async function CheckIsUserAuthenticated() {
+    try {
+        const response = await fetch('api/Auth/isuserauthenticated', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response;
+    }
+    catch (error) {
+        console.log('Error occured while checking is user authenticated: ' + error.message);
+        throw error;
+    }
+}
+
 export async function SendVerificationCode(recipientEmail) {
     var response;
     try {

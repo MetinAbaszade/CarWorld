@@ -5,7 +5,7 @@ using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Data.DataAccess.Concrete.EntityFramework
 {
-    public class EfFueltypeRepository : EfGenericRepository<Fueltype, AppDbContext>, IFueltypeRepository
+    public class EfFuelTypeRepository : EfGenericRepository<FuelType, AppDbContext>, IFuelTypeRepository
     {
     }
 }

@@ -1,16 +1,21 @@
-﻿using AspReactTestApp.Data.DataAccess.Abstract;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTOs;
+using Microsoft.EntityFrameworkCore;
+using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AspReactTestApp.Dto;
+using AutoMapper;
 
 namespace AspReactTestApp.Services.RegionService
 {
     public class RegionService : IRegionService
     {
         private readonly IRegionRepository _regionRepository;
+        private readonly IMapper _mapper;
 
-        public RegionService(IRegionRepository regionRepository)
+        public RegionService(IRegionRepository regionRepository, IMapper mapper)
         {
             _regionRepository = regionRepository;
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto> AddRegion(Region region)
@@ -51,15 +56,17 @@ namespace AspReactTestApp.Services.RegionService
             return responseDto;
         }
 
-        public async Task<List<Region>> GetAllRegions(string language)
+        public async Task<List<GenericEntityDto>> GetAllRegions(string language)
         {
             try
             {
                 var regions = await _regionRepository.GetList(
                     filter: c => c.RegionLocales.Any(fl => fl.Language.DisplayName == language),
                     orderBy: null,
-                    includeProperties: "RegionLocales");
-                return regions;
+                    include: source => source.Include(r => r.RegionLocales));
+
+                List<GenericEntityDto> regionDtos = _mapper.Map<List<GenericEntityDto>>(regions);
+                return regionDtos;
             }
             catch (Exception ex)
             {

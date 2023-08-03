@@ -10,7 +10,8 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Color : IEntity
     {
         public int Id { get; set; }
-        public List<ColorLocale> ColorLocales { get; set; } = new();
+
+        public List<ColorLocale>? ColorLocales { get; set; } 
 
         public Color() { }
     }

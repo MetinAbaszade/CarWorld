@@ -8,12 +8,13 @@ namespace AspReactTestApp.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext() {}
+        public AppDbContext() { }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -29,6 +30,13 @@ namespace AspReactTestApp.Data
             base.OnModelCreating(modelBuilder);
 
             #region SettingRelations
+
+            modelBuilder.Entity<User>()
+             .HasMany<Car>()
+             .WithOne(c => c.Owner)
+             .HasForeignKey(c => c.OwnerId)
+             .IsRequired(false);
+
             modelBuilder.Entity<Brand>()
               .HasMany<Car>()
               .WithOne(c => c.Brand)
@@ -63,6 +71,13 @@ namespace AspReactTestApp.Data
               .IsRequired(false)
               .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Car>()
+              .HasOne(c => c.MileageType)
+              .WithMany()
+              .HasForeignKey(c => c.MileageTypeId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Category>()
               .HasMany<Car>()
               .WithOne(c => c.Category)
@@ -80,7 +95,28 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<CategoryLocale>()
             .HasOne(cl => cl.Language)
             .WithMany(l => l.CategoryLocales)
-            .HasForeignKey("LanguageId")
+            .HasForeignKey(cl => cl.LanguageId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+            modelBuilder.Entity<Market>()
+              .HasMany<Car>()
+              .WithOne(c => c.Market)
+              .HasForeignKey(c => c.MarketId)
+              .OnDelete(DeleteBehavior.Cascade)
+              .IsRequired();
+
+            modelBuilder.Entity<Market>()
+             .HasMany(m => m.MarketLocales)
+             .WithOne(ml => ml.Market)
+             .HasForeignKey("MarketId")
+             .OnDelete(DeleteBehavior.Restrict)
+             .IsRequired();
+
+            modelBuilder.Entity<MarketLocale>()
+            .HasOne(ml => ml.Language)
+            .WithMany(l => l.MarketLocales)
+            .HasForeignKey(ml => ml.LanguageId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
@@ -88,7 +124,7 @@ namespace AspReactTestApp.Data
               .HasMany<Car>()
               .WithOne(c => c.Region)
               .HasForeignKey(c => c.RegionId)
-              .IsRequired();
+              .IsRequired(false);
 
             modelBuilder.Entity<Region>()
              .HasMany(r => r.RegionLocales)
@@ -99,26 +135,26 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<RegionLocale>()
             .HasOne(rl => rl.Language)
             .WithMany(l => l.RegionLocales)
-            .HasForeignKey("LanguageId")
+            .HasForeignKey(rl => rl.LanguageId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
-            modelBuilder.Entity<Fueltype>()
+            modelBuilder.Entity<FuelType>()
               .HasMany<Car>()
               .WithOne(c => c.Fueltype)
               .HasForeignKey(c => c.FueltypeId)
               .IsRequired();
 
-            modelBuilder.Entity<Fueltype>()
-              .HasMany(ft => ft.FueltypeLocales)
-              .WithOne(ftl => ftl.Fueltype)
+            modelBuilder.Entity<FuelType>()
+              .HasMany(ft => ft.FuelTypeLocales)
+              .WithOne(ftl => ftl.FuelType)
               .HasForeignKey("FueltypeId")
               .IsRequired();
 
-            modelBuilder.Entity<FueltypeLocale>()
+            modelBuilder.Entity<FuelTypeLocale>()
              .HasOne(ftl => ftl.Language)
-             .WithMany(l => l.FueltypeLocales)
-             .HasForeignKey("LanguageId")
+             .WithMany(l => l.FuelTypeLocales)
+             .HasForeignKey(ftl => ftl.LanguageId)
              .IsRequired();
 
             modelBuilder.Entity<Color>()
@@ -136,7 +172,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<ColorLocale>()
              .HasOne(cl => cl.Language)
              .WithMany(l => l.ColorLocales)
-             .HasForeignKey("LanguageId")
+             .HasForeignKey(c => c.LanguageId)
              .IsRequired();
 
             modelBuilder.Entity<Currency>()
@@ -144,6 +180,24 @@ namespace AspReactTestApp.Data
               .WithOne(c => c.Currency)
               .HasForeignKey(c => c.CurrencyId)
               .IsRequired();
+
+            modelBuilder.Entity<GearType>()
+              .HasMany<Car>()
+              .WithOne(c => c.GearType)
+              .HasForeignKey(c => c.GearTypeId)
+              .IsRequired();
+
+            modelBuilder.Entity<GearType>()
+             .HasMany(gt => gt.GearTypeLocales)
+             .WithOne(gtl => gtl.GearType)
+             .HasForeignKey("GearTypeId")
+             .IsRequired();
+
+            modelBuilder.Entity<GearTypeLocale>()
+           .HasOne(gtl => gtl.Language)
+           .WithMany(l => l.GearTypeLocales)
+           .HasForeignKey(gtl => gtl.LanguageId)
+           .IsRequired();
 
             modelBuilder.Entity<Transmission>()
               .HasMany<Car>()
@@ -160,25 +214,27 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<TransmissionLocale>()
            .HasOne(tl => tl.Language)
            .WithMany(l => l.TransmissionLocales)
-           .HasForeignKey("LanguageId")
+           .HasForeignKey(tl => tl.LanguageId)
            .IsRequired();
 
             modelBuilder.Entity<Year>()
               .HasMany<Car>()
               .WithOne(c => c.Year)
-              .HasForeignKey(c => c.YearId)
+              .HasForeignKey(c => c.ReleaseYearId)
               .IsRequired();
 
             modelBuilder.Entity<Car>()
              .HasMany(c => c.Images)
              .WithOne()
              .HasForeignKey("CarId")
-             .IsRequired();
+             .IsRequired()
+             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AutoSalon>()
             .HasMany(s => s.Cars)
             .WithOne(c => c.AutoSalon)
-            .HasForeignKey(c => c.AutoSalonId);
+            .HasForeignKey(c => c.AutoSalonId)
+            .IsRequired(false); ;
 
             modelBuilder.Entity<AutoSalon>()
            .HasMany(s => s.AutoSalonLocales)
@@ -189,7 +245,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<AutoSalonLocale>()
            .HasOne(sl => sl.Language)
            .WithMany(l => l.AutoSalonLocales)
-           .HasForeignKey("LanguageId")
+           .HasForeignKey(sl => sl.LanguageId)
            .IsRequired();
 
             modelBuilder.Entity<Feature>()
@@ -204,7 +260,7 @@ namespace AspReactTestApp.Data
             modelBuilder.Entity<FeatureLocale>()
            .HasOne(fl => fl.Language)
            .WithMany(l => l.FeatureLocales)
-           .HasForeignKey("LanguageId");
+           .HasForeignKey(fl => fl.LanguageId);
             #endregion
         }
 
@@ -214,21 +270,26 @@ namespace AspReactTestApp.Data
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Color> Colors { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Market> Markets { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<Fueltype> Fueltypes { get; set; }
+        public DbSet<FuelType> FuelTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+        public DbSet<GearType> GearTypes { get; set; }
+        public DbSet<MileageType> MileageTypes { get; set; }
         public DbSet<AutoSalon> AutoSalons { get; set; }
-        public DbSet<Image> Images { get; set; }
         public DbSet<ColorLocale> ColorLocales { get; set; }
         public DbSet<Transmission> Transmissions { get; set; }
         public DbSet<RegionLocale> RegionLocales { get; set; }
-        public DbSet<FueltypeLocale> FueltypeLocales { get; set; }
+        public DbSet<MarketLocale> MarketLocales { get; set; }
+        public DbSet<FeatureLocale> FeatureLocales { get; set; }
+        public DbSet<FuelTypeLocale> FuelTypeLocales { get; set; }
         public DbSet<CategoryLocale> CategoryLocales { get; set; }
+        public DbSet<GearTypeLocale> GearTypeLocales { get; set; }
         public DbSet<AutoSalonLocale> AutoSalonLocales { get; set; }
         public DbSet<TransmissionLocale> TransmissionLocales { get; set; }
-        public DbSet<FeatureLocale> FeatureLocales { get; set; }
     }
 }

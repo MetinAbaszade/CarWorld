@@ -1,6 +1,7 @@
 ﻿using AspReactTestApp.Data.Core.Abstract;
 using AspReactTestApp.Entities.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -42,14 +43,14 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
         }
 
         public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter,
-                                       string includeProperties = "")
+                                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             using (var context = new TContext())
             {
                 IQueryable<TEntity> query = context.Set<TEntity>();
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                if(include != null)
                 {
-                    query = query.Include(includeProperty);
+                    query = include(query);
                 }
                 return await query.SingleOrDefaultAsync(filter);
             }
@@ -57,7 +58,7 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
 
         public async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> filter = null,
                                                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                 string includeProperties = "")
+                                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             using (var context = new TContext())
             {
@@ -67,9 +68,9 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
                     query = query.Where(filter);
                 }
 
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                if (include != null)
                 {
-                    query = query.Include(includeProperty);
+                    query = include(query);
                 }
 
                 if (orderBy != null)
@@ -82,11 +83,11 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
         }
 
         public async Task<List<TEntity>> GetListWithPagination(
-                                                int? pageNumber, 
+                                                int? pageNumber,
                                                 int? pageSize,
                                                 Expression<Func<TEntity, bool>> filter = null,
                                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                string includeProperties = "")
+                                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             using (var context = new TContext())
             {
@@ -96,9 +97,9 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
                     query = query.Where(filter);
                 }
 
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                if (include != null)
                 {
-                    query = query.Include(includeProperty);
+                    query = include(query);
                 }
 
                 if (pageNumber.HasValue && pageSize.HasValue)

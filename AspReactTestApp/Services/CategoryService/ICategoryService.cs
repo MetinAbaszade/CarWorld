@@ -1,4 +1,5 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.Dto;
+using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Services.CategoryService
@@ -7,6 +8,6 @@ namespace AspReactTestApp.Services.CategoryService
     {
         public Task<ResponseDto> AddCategory(Category category);
         public Task<ResponseDto> RemoveCategoryById(int Id);
-        public Task<List<Category>> GetAllCategories(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllCategories(string language = "Az");
     }
 }

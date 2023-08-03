@@ -10,8 +10,9 @@ namespace AspReactTestApp.Entities.Concrete.CarRelated
     public class Feature : IEntity
     {
         public int Id { get; set; }
-        public List<Car> Cars { get; set; } = new();
-        public List<FeatureLocale> FeatureLocales { get; set; }
+
+        public List<Car>? Cars { get; set; }
+        public List<FeatureLocale>? FeatureLocales { get; set; } 
 
         public Feature() { }
     }

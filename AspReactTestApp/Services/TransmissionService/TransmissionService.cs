@@ -1,16 +1,21 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspReactTestApp.Services.TransmissionService
 {
     public class TransmissionService : ITransmissionService
     {
         private readonly ITransmissionRepository _transmissionRepository;
+        private readonly IMapper _mapper;
 
-        public TransmissionService(ITransmissionRepository transmissionRepository)
+        public TransmissionService(ITransmissionRepository transmissionRepository, IMapper mapper)
         {
             _transmissionRepository = transmissionRepository;
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto> AddTransmission(Transmission transmission)
@@ -51,15 +56,17 @@ namespace AspReactTestApp.Services.TransmissionService
             return responseDto;
         }
 
-        public async Task<List<Transmission>> GetAllTransmissions(string language)
+        public async Task<List<GenericEntityDto>> GetAllTransmissions(string language)
         {
             try
             {
                 var transmissions = await _transmissionRepository.GetList(
                     filter: t => t.TransmissionLocales.Any(tl => tl.Language.DisplayName == language),
                     orderBy: null,
-                    includeProperties: "TransmissionLocales");
-                return transmissions;
+                    include: source => source.Include(t => t.TransmissionLocales));
+
+                List<GenericEntityDto> transmissionDtos = _mapper.Map<List<GenericEntityDto>>(transmissions);
+                return transmissionDtos;
             }
             catch (Exception ex)
             {

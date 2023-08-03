@@ -1,12 +1,8 @@
 using AspReactTestApp.Data;
-using AspReactTestApp.Data.Core.Abstract;
-using AspReactTestApp.Data.Core.Concrete.EntityFramework;
-using AspReactTestApp.Data.DataAccess.Abstract;
-using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
-using AspReactTestApp.Entities.Concrete;
-using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.AuthService;
 using AspReactTestApp.Services.AutoSalonService;
+using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Data.DataAccess.Concrete.EntityFramework;
 using AspReactTestApp.Services.BrandService;
 using AspReactTestApp.Services.CarService;
 using AspReactTestApp.Services.CategoryService;
@@ -23,7 +19,6 @@ using AspReactTestApp.Services.UserService;
 using AspReactTestApp.Services.YearService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -39,10 +34,13 @@ namespace AspReactTestApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
             builder.Services.AddControllersWithViews().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
             });
+
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
             builder.Services.AddCors(options =>
             {
@@ -63,7 +61,7 @@ namespace AspReactTestApp
             builder.Services.AddScoped<IColorRepository, EfColorRepository>();
             builder.Services.AddScoped<ICurrencyRepository, EfCurrencyRepository>();
             builder.Services.AddScoped<IFeatureRepository, EfFeatureRepository>();
-            builder.Services.AddScoped<IFueltypeRepository, EfFueltypeRepository>();
+            builder.Services.AddScoped<IFuelTypeRepository, EfFuelTypeRepository>();
             builder.Services.AddScoped<IModelRepository, EfModelRepository>();
             builder.Services.AddScoped<IRegionRepository, EfRegionRepository>();
             builder.Services.AddScoped<ITransmissionRepository, EfTransmissionRepository>();
@@ -79,9 +77,9 @@ namespace AspReactTestApp
             builder.Services.AddScoped<IBrandService, BrandService>();
             builder.Services.AddScoped<ICarService, CarService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IColorService, ColorService>(); 
+            builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<IFeatureService, FeatureService>();
-            builder.Services.AddScoped<IFueltypeService, FueltypeService>();
+            builder.Services.AddScoped<IFuelTypeService, FuelTypeService>();
             builder.Services.AddScoped<IModelService, ModelService>();
             builder.Services.AddScoped<IRegionService, RegionService>();
             builder.Services.AddScoped<ITransmissionService, TransmissionService>();

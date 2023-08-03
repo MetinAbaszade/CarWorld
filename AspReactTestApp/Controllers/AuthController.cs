@@ -56,6 +56,24 @@ namespace AspReactTestApp.Controllers
             }
         }
 
+        [HttpGet("isuserauthenticated")]
+        public async Task<ActionResult> CheckIsUserAuthenticated()
+        {
+            try
+            {
+                var isUserAuthenticated = _authService.IsUserAuthenticated();
+                if (isUserAuthenticated)
+                {
+                    return Ok();
+                }
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpPost("refresh-token")]
         public async Task<ActionResult<ResponseDto>> RefreshToken()
         {
