@@ -68,7 +68,7 @@ namespace AspReactTestApp.Services.CategoryService
                 List<GenericEntityDto> categoryDtos = _mapper.Map<List<GenericEntityDto>>(categories);
                 return categoryDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

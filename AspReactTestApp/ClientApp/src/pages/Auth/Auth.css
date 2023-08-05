@@ -58,7 +58,8 @@ body {
   display: flex;
   justify-content: space-between;
   width: 55%;
-  padding: 100px;
+  height: auto;
+  padding: 50px;
   border-radius: 5px;
 }
 
@@ -110,11 +111,9 @@ body {
 }
 
 .login-card img {
-  width: 120px;
+  width: 180px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  margin-bottom: 15px;
-  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.4); 
   object-fit: cover;
 }
 
@@ -198,7 +197,7 @@ body {
 
 .spinner {
   position: absolute;
-    top: 50%;
+    top: 30%;
     right: 10px;
     width: 20px;
     height: 20px;

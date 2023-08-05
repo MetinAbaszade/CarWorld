@@ -9,6 +9,6 @@ namespace AspReactTestApp.Services.CarService
         public Task<ResponseDto> AddCar(Car car);
         public Task<ResponseDto> RemoveCar(int id);
         public Task<CarDetailsDto> GetCarDetails(int id);
-        public Task<List<CarDto>> GetCarsWithPagination(string sort, int pageNumber, int pageSize = 20);
+        public Task<List<CarDto>> GetCarsWithPagination(GetCarsRequestDto getCarsRequestDto);
     }
 }

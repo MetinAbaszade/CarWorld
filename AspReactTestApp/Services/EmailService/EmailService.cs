@@ -44,9 +44,9 @@ namespace AspReactTestApp.Services.EmailService
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

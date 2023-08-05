@@ -260,9 +260,7 @@ export default function RegisterCard() {
                 <SwiperSlide>
                     <VerificationInput handlePrevSlide={handlePrevSlide} formik={formik} />
                 </SwiperSlide>
-
             </Swiper >
-
         </form>
     )
 }

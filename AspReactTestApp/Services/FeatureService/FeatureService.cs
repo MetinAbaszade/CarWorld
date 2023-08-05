@@ -68,7 +68,7 @@ namespace AspReactTestApp.Services.FeatureService
                 List<GenericEntityDto> featureDtos = _mapper.Map<List<GenericEntityDto>>(features);
                 return featureDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

@@ -101,7 +101,7 @@ namespace AspReactTestApp.Services.UserService
         public string GetUserRole()
         {
             var result = string.Empty;
-            result = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
+            result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             return result;
         }
     }

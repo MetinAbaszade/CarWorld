@@ -35,7 +35,7 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpPost("getcardetails")]
+        [HttpPost("getcardetails/{id}")]
         public async Task<ActionResult<CarDetailsDto>> GetCarDetails(int id)
         {
             var carDetailsDto = await _carService.GetCarDetails(id);
@@ -43,9 +43,9 @@ namespace AspReactTestApp.Controllers
         }
 
         [HttpPost("getcars")]
-        public async Task<ActionResult<List<CarDto>>> GetCars(int pageNumber = 1, int pageSize = 100)
+        public async Task<ActionResult<List<CarDto>>> GetCars(GetCarsRequestDto getCarsRequestDto)
         {
-            var carDtoList = await _carService.GetCarsWithPagination("", pageNumber, pageSize);
+            var carDtoList = await _carService.GetCarsWithPagination(getCarsRequestDto);
             return carDtoList;
         }
     }

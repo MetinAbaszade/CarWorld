@@ -58,7 +58,7 @@ namespace AspReactTestApp.Services.AutoSalonService
                 var autoSalons = await _autoSalonRepository.GetList();
                 return autoSalons;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

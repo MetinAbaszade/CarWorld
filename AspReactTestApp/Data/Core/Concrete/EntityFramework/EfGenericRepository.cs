@@ -42,13 +42,27 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
             }
         }
 
-        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter,
-                                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        public async Task Update(TEntity entity)
+        {
+            using (var context = new TContext())
+            {
+                var addedEntity = context.Entry(entity);
+                addedEntity.State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<TEntity?> Get(Expression<Func<TEntity, bool>>? filter = null,
+                                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
         {
             using (var context = new TContext())
             {
                 IQueryable<TEntity> query = context.Set<TEntity>();
-                if(include != null)
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+                if (include != null)
                 {
                     query = include(query);
                 }
@@ -56,9 +70,9 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
             }
         }
 
-        public async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>> filter = null,
-                                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        public async Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>>? filter = null,
+                                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
         {
             using (var context = new TContext())
             {
@@ -75,19 +89,19 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
 
                 if (orderBy != null)
                 {
-                    return orderBy(query).ToList();
+                    return await orderBy(query).ToListAsync();
                 }
 
-                return query.ToList();
+                return await query.ToListAsync();
             }
         }
 
         public async Task<List<TEntity>> GetListWithPagination(
                                                 int? pageNumber,
                                                 int? pageSize,
-                                                Expression<Func<TEntity, bool>> filter = null,
-                                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+                                                Expression<Func<TEntity, bool>>? filter = null,
+                                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
         {
             using (var context = new TContext())
             {
@@ -109,21 +123,94 @@ namespace AspReactTestApp.Data.Core.Concrete.EntityFramework
 
                 if (orderBy != null)
                 {
-                    return orderBy(query).ToList();
+                    return await orderBy(query).ToListAsync();
                 }
 
-                return query.ToList();
+                return await query.ToListAsync();
             }
         }
 
-        public async Task Update(TEntity entity)
+        public async Task<List<TType>> Select<TType>(Expression<Func<TEntity, bool>>? filter = null,
+                                                     Expression<Func<TEntity, TType>>? select = null) where TType : class
         {
             using (var context = new TContext())
             {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Modified;
-                await context.SaveChangesAsync();
+                IQueryable<TEntity> query = context.Set<TEntity>();
+
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                if (select != null)
+                {
+                    return await query.Select(select).ToListAsync();
+                }
+
+                return await query.Cast<TType>().ToListAsync();
             }
         }
+
+        public async Task<TType?> SelectSingle<TType>(Expression<Func<TEntity, bool>>? filter = null,
+                                                      Expression<Func<TEntity, TType>>? select = null) where TType : class
+        {
+            using (var context = new TContext())
+            {
+                IQueryable<TEntity> query = context.Set<TEntity>();
+
+                if (select is null)
+                {
+                    return null;
+                }
+
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                if (select != null)
+                {
+                    return await query.Select(select).FirstOrDefaultAsync();
+                }
+
+                return await query.Cast<TType>().FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<List<TType>> SelectWithPagination<TType>(int? pageNumber,
+                                                             int? pageSize,
+                                                             Expression<Func<TEntity, bool>>? filter = null,
+                                                             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                                             Expression<Func<TEntity, TType>>? select = null) where TType : class
+        {
+            using (var context = new TContext())
+            {
+                IQueryable<TEntity> query = context.Set<TEntity>();
+
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                if (pageNumber.HasValue && pageSize.HasValue)
+                {
+                    query = query.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+                }
+
+                if (orderBy != null)
+                {
+                    query = orderBy(query);
+                }
+
+                if (select != null)
+                {
+                    return await query.Select(select).ToListAsync();
+                }
+
+                return await query.Cast<TType>().ToListAsync();
+            }
+        }
+
+    
     }
 }

@@ -1,9 +1,9 @@
-﻿using AspReactTestApp.Data.DataAccess.Abstract;
+﻿using AutoMapper;
 using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
-using AspReactTestApp.Entities.Concrete.CarRelated;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Entities.Concrete.CarRelated;
 
 namespace AspReactTestApp.Services.CarService
 {
@@ -62,24 +62,41 @@ namespace AspReactTestApp.Services.CarService
         {
             try
             {
-                Car car = await _carDal.Get(filter: c => c.Id == id,
-                    include: source => source.Include((c) => c.Region).ThenInclude(r => r.RegionLocales)
-                                     .Include((c) => c.Year)
-                                     .Include((c) => c.Owner)
-                                     .Include((c) => c.Brand)
-                                     .Include((c) => c.Model)
-                                     .Include((c) => c.Images)
-                                     .Include((c) => c.Currency)
-                                     .Include((c) => c.AutoSalon)
-                                     .Include((c) => c.MileageType)
-                                     .Include((c) => c.Color).ThenInclude(c => c.ColorLocales)
-                                     .Include((c) => c.Market).ThenInclude(m => m.MarketLocales)
-                                     .Include((c) => c.Category).ThenInclude(c => c.CategoryLocales)
-                                     .Include((c) => c.Fueltype).ThenInclude(ft => ft.FuelTypeLocales)
-                                     .Include((c) => c.GearType).ThenInclude(gt => gt.GearTypeLocales)
-                                     .Include((c) => c.Features).ThenInclude(f => f.FeatureLocales)
-                                     .Include((c) => c.Transmission).ThenInclude(t => t.TransmissionLocales));
-                CarDetailsDto carDetailsDto = _mapper.Map<Car, CarDetailsDto>(car);
+                CarDetailsDto? carDetailsDto = await _carDal.SelectSingle(filter: c => c.Id == id,
+                    select: c => new CarDetailsDto
+                    {
+                        Price = c.Price,
+                        Mileage = c.Mileage,
+                        Brand = c.Brand.Name,
+                        Model = c.Model.Name,
+                        Color = c.Color.ColorLocales.FirstOrDefault().Name,
+                        Market = c.Market.MarketLocales.FirstOrDefault().Name,
+                        Region = c.Region.RegionLocales.FirstOrDefault().Name,
+                        Category = c.Category.CategoryLocales.FirstOrDefault().Name,
+                        FuelType = c.Fueltype.FuelTypeLocales.FirstOrDefault().Name,
+                        GearType = c.GearType.GearTypeLocales.FirstOrDefault().Name,
+                        Currency = c.Currency.Name,
+                        ReleaseYear = c.Year.Value,
+                        OwnerName = c.Owner.Name,
+                        HorsePower = c.HorsePower,
+                        SeatCount = c.SeatCount,
+                        OwnerNumber = c.Owner.Number,
+                        MileageType = c.MileageType.Name,
+                        Description = c.Description,
+                        EngineVolume = c.EngineVolume,
+                        CreditAvailable = c.CreditAvailable,
+                        BarterAvailable = c.BarterAvailable,
+                        Images = c.Images.Select(i => i.Url).ToList(),
+                        Features = c.Features.Select(f => f.FeatureLocales.FirstOrDefault().Name).ToList(),
+                        AutoSalonTitle = c.AutoSalon.Title,
+                        AutoSalonNumber = c.AutoSalon.Number,
+                        AutoSalonLogoUrl = c.AutoSalon.LogoUrl,
+                        AutoSalonCoverUrl = c.AutoSalon.CoverUrl,
+                        AutoSalonLocationUrl = c.AutoSalon.LocationUrl,
+                        AutoSalonSlogan = c.AutoSalon.AutoSalonLocales.FirstOrDefault().Slogan,
+                        AutoSalonDescription = c.AutoSalon.AutoSalonLocales.FirstOrDefault().Description,
+                        AutoSalonLocation = c.AutoSalon.AutoSalonLocales.FirstOrDefault().Location
+                    });
                 return carDetailsDto;
             }
             catch (Exception)
@@ -88,13 +105,13 @@ namespace AspReactTestApp.Services.CarService
             }
         }
 
-        public async Task<List<CarDto>> GetCarsWithPagination(string sort, int pageNumber = 1, int pageSize = 5)
+        public async Task<List<CarDto>> GetCarsWithPagination(GetCarsRequestDto getCarsRequestDto)
         {
-            Func<IQueryable<Car>, IOrderedQueryable<Car>> orderBy = null;
+            Func<IQueryable<Car>, IOrderedQueryable<Car>>? orderBy = null;
 
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(getCarsRequestDto.Sort))
             {
-                switch (sort)
+                switch (getCarsRequestDto.Sort)
                 {
                     case "price_low_to_high":
                         orderBy = q => q.OrderBy(c => c.Price);
@@ -114,8 +131,8 @@ namespace AspReactTestApp.Services.CarService
             try
             {
                 List<Car> cars =
-                    await _carDal.GetListWithPagination(pageNumber,
-                                                        pageSize,
+                    await _carDal.GetListWithPagination(getCarsRequestDto.PageNumber,
+                                                        getCarsRequestDto.PageSize,
                                                         filter: null,
                                                         orderBy,
                                                         include: source => source.Include((c) => c.Brand)

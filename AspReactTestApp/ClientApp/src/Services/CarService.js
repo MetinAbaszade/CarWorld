@@ -1,14 +1,18 @@
 
 
-export async function GetCars(pageNumber = 1, pageSize = 100, sort = "") {
+export async function GetCars(pageNumber = 1, pageSize = 20, sort = "") {
     try {
         const response = await fetch('api/Cars/getcars', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify({
+                'PageSize': pageSize, 
+                'PageNumber': pageNumber,
+                'Sort': sort
+            }),
             credentials: 'include'
-
         })
 
         if (!response.ok) {
@@ -27,9 +31,9 @@ export async function GetCars(pageNumber = 1, pageSize = 100, sort = "") {
 }
 
 export async function GetCarDetails(id) {
-    console.log(id);
+    console.log(id)
     try {
-        const response = await fetch(`api/Cars/getcardetails?id=${id}`, {
+        const response = await fetch(`api/Cars/getcardetails/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,7 +48,7 @@ export async function GetCarDetails(id) {
         }
 
         const authResponse = await response.json();
-        return authResponse.$values;
+        return authResponse;
     }
     catch (error) {
         console.error('Error occurred while fetching Car Details:', error.message);

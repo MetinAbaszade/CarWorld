@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SwiperCore, { Navigation } from 'swiper/core';
-import ProfileImage from '../../Register/ProfileImage/ProfileImageComponent'
 
 import { NavLink } from "react-router-dom";
 import useLoginFormValidation from "../../Validations/useLoginFormValidation";
@@ -16,17 +15,18 @@ export default function LoginCard() {
 
     const { formik } = useLoginFormValidation(selectedImage);
 
-    function LoginButtonClick() {
+    async function LoginButtonClick() {
         setLoading(true);
-        formik.submitForm();
+        await formik.submitForm();
         setLoading(false);
     }
 
     return (
         <form className="login-form" onSubmit={formik.handleSubmit}>
-            <ProfileImage setSelectedImage={setSelectedImage} />
-
-            <h2 className="text-center">Create Account</h2>
+            <div>
+                <img className="w-96" src="/UserLogo2.jpeg" alt="UserLogo" />
+               </div>
+            <h2 className="text-center font-mono text-2xl">CarUniverse</h2>
             <div className="username mt-3">
                 <input
                     type="userName"

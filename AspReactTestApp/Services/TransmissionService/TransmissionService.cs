@@ -68,7 +68,7 @@ namespace AspReactTestApp.Services.TransmissionService
                 List<GenericEntityDto> transmissionDtos = _mapper.Map<List<GenericEntityDto>>(transmissions);
                 return transmissionDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

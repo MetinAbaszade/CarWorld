@@ -72,7 +72,7 @@ namespace AspReactTestApp.Services.ColorService
                 List<GenericEntityDto> colorDtos = _mapper.Map<List<GenericEntityDto>>(colors);
                 return colorDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             } 

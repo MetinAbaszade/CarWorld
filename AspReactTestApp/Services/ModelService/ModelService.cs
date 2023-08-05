@@ -58,7 +58,7 @@ namespace AspReactTestApp.Services.ModelService
                 var modelList = await _modelRepository.GetList(m => m.BrandId == brandId);
                 return modelList;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

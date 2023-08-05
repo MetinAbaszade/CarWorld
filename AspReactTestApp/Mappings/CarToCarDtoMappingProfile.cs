@@ -9,6 +9,7 @@ namespace AspReactTestApp.Mappings
         public CarToCarDtoMappingProfile()
         {
             CreateMap<Car, CarDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.RegionLocales.FirstOrDefault().Name))
                 .ForMember(dest => dest.Model, opt => opt.MapFrom(src => src.Model.Name))

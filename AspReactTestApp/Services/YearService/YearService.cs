@@ -58,7 +58,7 @@ namespace AspReactTestApp.Services.YearService
                 var years = await _yearRepository.GetList();
                 return years;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

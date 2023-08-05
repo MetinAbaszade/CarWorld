@@ -14,7 +14,7 @@ export default function Home() {
   const [regions, setRegions] = useState([]);
   const [fueltypes, setFueltypes] = useState([]);
   const [transmissions, setTransmissions] = useState([]);
-  const [isAuthorized, setIsAuthorized] = useState(null); 
+  const [isAuthorized, setIsAuthorized] = useState(null);
 
   const [selectedFueltype, setSelectedFueltype] = useState(0);
   const [selectedBrand, setSelectedBrand] = useState(0);
@@ -28,12 +28,12 @@ export default function Home() {
   async function fetchData() {
     try {
       const startTime = performance.now();
-       const [brands, colors, regions, fuelTypes, /*transmissions,*/ cars] = await Promise.all([
+      const [brands, colors, regions, fuelTypes, transmissions, cars] = await Promise.all([
         BrandService.GetBrands(),
         ColorService.GetColors(),
         RegionService.GetRegions(),
         FueltypeService.GetFueltypes(),
-       // TransmissionService.GetTransmissions(),
+        TransmissionService.GetTransmissions(),
         CarService.GetCars()
       ]);
 
@@ -41,7 +41,7 @@ export default function Home() {
       setColors(colors);
       setRegions(regions);
       setFueltypes(fuelTypes);
-     // setTransmissions(transmissions);
+      setTransmissions(transmissions);
       setCars(cars);
       setIsAuthorized(true);  // NEW
 
@@ -50,7 +50,7 @@ export default function Home() {
     } catch (error) {
       console.log(error)
       if (error.status === 401) {
-       navigate("/auth/login");
+        navigate("/auth/login");
       }
     }
   }

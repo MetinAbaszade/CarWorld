@@ -68,7 +68,7 @@ namespace AspReactTestApp.Services.RegionService
                 List<GenericEntityDto> regionDtos = _mapper.Map<List<GenericEntityDto>>(regions);
                 return regionDtos;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
