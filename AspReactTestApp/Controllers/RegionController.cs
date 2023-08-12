@@ -34,10 +34,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getregions")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetRegions()
+        [HttpGet("getregions/{languageId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetRegions(int languageId)
         {
-            var regionList = await _regionService.GetAllRegions();
+            var regionList = await _regionService.GetAllRegions(languageId);
             return regionList;
         }
     }

@@ -6,7 +6,8 @@ namespace AspReactTestApp.Services.AuthService
 {
     public interface IAuthService
     {
-        public Task<(ResponseDto, TokenDto)> LoginUser(LoginUserDto request);
+        public Task<(ResponseDto, TokenDto)> LogInUser(LoginUserDto request);
+        public Task<ResponseDto> LogOutUser();
         public Task<(ResponseDto, TokenDto)> RefreshToken();
         public bool IsUserAuthenticated();
     }

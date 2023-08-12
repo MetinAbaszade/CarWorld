@@ -32,10 +32,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getautosalons")]
-        public async Task<ActionResult<List<AutoSalon>>> GetAutoSalons()
+        [HttpGet("getautosalons/{languageId}")]
+        public async Task<ActionResult<List<AutoSalon>>> GetAutoSalons(int languageId)
         {
-            var autosalonList = await _autoSalonService.GetAllAutoSalons();
+            var autosalonList = await _autoSalonService.GetAllAutoSalons(languageId);
             return autosalonList;
         }
     }

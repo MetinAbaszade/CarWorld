@@ -31,9 +31,8 @@ namespace AspReactTestApp.Services.AuthService
         }
 
         // LoginUser method for user authentication
-        public async Task<(ResponseDto, TokenDto)> LoginUser(LoginUserDto request)
+        public async Task<(ResponseDto, TokenDto)> LogInUser(LoginUserDto request)
         {
-
             var loginValidator = new LoginUserDtoValidator();
             var validationResult = loginValidator.Validate(request);
             if (!validationResult.IsValid)
@@ -52,10 +51,8 @@ namespace AspReactTestApp.Services.AuthService
                 }, new TokenDto());
             }
 
-
             // Retrieve user if exists
             var user = await _userDal.Get(user => user.UserName == request.UserName);
-
             if (user == null)
             {
                 var errors = new Dictionary<string, string>();
@@ -93,15 +90,50 @@ namespace AspReactTestApp.Services.AuthService
                 {
                     IsSuccessfull = true,
                     Message = "User has successfully been logged in"
-
                 },
                 new TokenDto()
                 {
-                    AccessToken = accessToken,
+                    AccessToken = accessToken.Token,
                     RefreshToken = refreshToken.Token,
-                    TokenExpires = refreshToken.Expires
+                    AccessTokenExpires = accessToken.Expires,
+                    RefreshTokenExpires = refreshToken.Expires
                 }
              );
+        }
+
+        public async Task<ResponseDto> LogOutUser()
+        {
+            // Retrieve refresh token from the HTTP context
+            var refreshToken = _httpContextAccessor?.HttpContext?.Request.Cookies["refresh_token"];
+
+            // Find the user with the given refresh token
+            var user = await _userDal.Get(user => user.RefreshToken == refreshToken);
+
+            if (user == null)
+            {
+                return new ResponseDto
+                {
+                    IsSuccessfull = false,
+                    Message = "User not found!"
+                };
+            }
+
+            // Invalidate the refresh token and set the expiration time to now
+            user.RefreshToken = null;
+            user.TokenExpires = DateTime.Now;
+
+            // Update the user in the database
+            await _userDal.Update(user);
+
+            // Clear the access_token and refreshToken cookies
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("access_token");
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("refresh_token");
+
+            return new ResponseDto
+            {
+                IsSuccessfull = true,
+                Message = "User has been successfully logged out"
+            };
         }
 
         // RefreshToken method to refresh an existing JWT access token
@@ -135,9 +167,10 @@ namespace AspReactTestApp.Services.AuthService
                 },
                 new TokenDto()
                 {
-                    AccessToken = newAccessToken,
+                    AccessToken = newAccessToken.Token,
                     RefreshToken = newRefreshToken.Token,
-                    TokenExpires = newRefreshToken.Expires
+                    AccessTokenExpires = newAccessToken.Expires,
+                    RefreshTokenExpires = newRefreshToken.Expires
                 }
             );
         }

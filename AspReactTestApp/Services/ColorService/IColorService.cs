@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.ColorService
     {
         public Task<ResponseDto> AddColor(Color color);
         public Task<ResponseDto> RemoveColorById(int Id);
-        public Task<List<GenericEntityDto>> GetAllColors(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllColors(int languageId);
     }
 }

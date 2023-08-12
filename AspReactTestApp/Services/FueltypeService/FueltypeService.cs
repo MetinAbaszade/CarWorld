@@ -56,16 +56,17 @@ namespace AspReactTestApp.Services.FueltypeService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllFuelTypes(string language)
+        public async Task<List<GenericEntityDto>> GetAllFuelTypes(int languageId)
         {
             try
             {
-                var fuelTypes = await _fuelTypeRepository.GetList(
-                    filter: ft => ft.FuelTypeLocales.Any(ftl => ftl.Language.DisplayName == language),
-                    orderBy: null,
-                    include: source => source.Include(ft => ft.FuelTypeLocales));
+                var furlTypeDtos = await _fuelTypeRepository.Select(
+                    select: ft => new GenericEntityDto
+                    {
+                        Id = ft.Id,
+                        Name = ft.FuelTypeLocales.SingleOrDefault(ftl => ftl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> furlTypeDtos = _mapper.Map<List<GenericEntityDto>>(fuelTypes);
                 return furlTypeDtos;
             }
             catch (Exception ex)

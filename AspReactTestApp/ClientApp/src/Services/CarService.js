@@ -31,7 +31,6 @@ export async function GetCars(pageNumber = 1, pageSize = 20, sort = "") {
 }
 
 export async function GetCarDetails(id) {
-    console.log(id)
     try {
         const response = await fetch(`api/Cars/getcardetails/${id}`, {
             method: 'POST',

@@ -1,4 +1,5 @@
-﻿using AspReactTestApp.Entities.Concrete;
+﻿using AspReactTestApp.Dto;
+using AspReactTestApp.Entities.Concrete;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,9 +18,8 @@ namespace AspReactTestApp.Services.TokenService
             _configuration = configuration;
         }
 
-
         // GenerateAccessToken method to generate a JWT access token
-        public string GenerateAccessToken(User user)
+        public AuthToken GenerateAccessToken(User user)
         {
             // Create claims for the JWT token
             List<Claim> claims = new List<Claim>()
@@ -33,36 +33,39 @@ namespace AspReactTestApp.Services.TokenService
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("Appsettings:Token").Value));
 
+            var accessTokenExpireTimeinMunutes = _configuration.GetSection("DefaultValues:AccessTokenExpireTimeinMinutes").Value;
+            var accessTokenExpireTimeinMunutesInt = int.Parse(accessTokenExpireTimeinMunutes);
             // Create the signing credentials
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var accessTokenExpireTime = DateTime.Now.AddMinutes(accessTokenExpireTimeinMunutesInt);
 
             // Create the JWT token
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: accessTokenExpireTime,
                 signingCredentials: creds);
 
             // Write the JWT token to a string
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            // Set the accessToken cookie
-            var cookieOptions = new CookieOptions()
+            return new AuthToken()
             {
-                HttpOnly = true,
-                Expires = token.ValidTo
+                Token = jwt,
+                Expires = accessTokenExpireTime
             };
-
-            return jwt;
         }
 
         // GenerateRefreshToken method to create a new refresh token
-        public RefreshToken GenerateRefreshToken()
+        public AuthToken GenerateRefreshToken()
         {
-            var refreshToken = new RefreshToken()
+            var refreshTokenExpireTimeinDays = _configuration.GetSection("DefaultValues:RefreshTokenExpireTimeinDays").Value;
+            var refreshTokenExpireTimeinDaysInt = int.Parse(refreshTokenExpireTimeinDays);
+
+            var refreshToken = new AuthToken()
             {
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Created = DateTime.Now,
-                Expires = DateTime.Now.AddDays(30)
+                Expires = DateTime.Now.AddDays(refreshTokenExpireTimeinDaysInt)
             };
 
             return refreshToken;

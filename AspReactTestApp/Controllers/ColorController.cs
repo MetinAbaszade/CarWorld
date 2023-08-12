@@ -34,10 +34,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getcolors")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetColors()
+        [HttpGet("getcolors/{languageId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetColors(int languageId)
         {
-            var colorsList = await _colorService.GetAllColors();
+            var colorsList = await _colorService.GetAllColors(languageId);
             return colorsList;
         }
     }

@@ -1,16 +1,20 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
+using AspReactTestApp.Dto;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AutoMapper;
 
 namespace AspReactTestApp.Services.ModelService
 {
     public class ModelService : IModelService
     {
         private readonly IModelRepository _modelRepository;
+        private readonly IMapper _mapper;
 
-        public ModelService(IModelRepository modelRepository)
+        public ModelService(IModelRepository modelRepository, IMapper mapper)
         {
             _modelRepository = modelRepository;
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto> AddModel(Model model)
@@ -51,12 +55,13 @@ namespace AspReactTestApp.Services.ModelService
             return responseDto;
         }
 
-        public async Task<List<Model>> GetModelsByBrandId(int brandId)
+        public async Task<List<GenericEntityDto>> GetModelsByBrandId(int brandId)
         {
             try
             {
                 var modelList = await _modelRepository.GetList(m => m.BrandId == brandId);
-                return modelList;
+                List<GenericEntityDto> modelsDtos = _mapper.Map<List<Model>, List<GenericEntityDto>>(modelList);
+                return modelsDtos;
             }
             catch (Exception)
             {

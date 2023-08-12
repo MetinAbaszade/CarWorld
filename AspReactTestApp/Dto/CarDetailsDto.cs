@@ -4,6 +4,8 @@
     {
         public int Price { get; set; }
         public int Mileage { get; set; }
+        // Because we get cars related with this spesific car, we need category id
+        public int CategoryId { get; set; }
         public string Brand { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
@@ -25,6 +27,7 @@
         public bool BarterAvailable { get; set; }
         public List<string> Images { get; set; } = new();
         public List<string> Features { get; set; } = new();
+        public List<CarDto> RelatedCars { get; set; }
         public string AutoSalonTitle { get; set; } = string.Empty;
         public string AutoSalonNumber { get; set; } = string.Empty;
         public string AutoSalonLogoUrl { get; set; } = string.Empty;

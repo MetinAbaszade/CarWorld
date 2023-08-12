@@ -56,17 +56,18 @@ namespace AspReactTestApp.Services.TransmissionService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllTransmissions(string language)
+        public async Task<List<GenericEntityDto>> GetAllTransmissions(int languageId)
         {
             try
             {
-                var transmissions = await _transmissionRepository.GetList(
-                    filter: t => t.TransmissionLocales.Any(tl => tl.Language.DisplayName == language),
-                    orderBy: null,
-                    include: source => source.Include(t => t.TransmissionLocales));
+                var transmissionDtos = await _transmissionRepository.Select(
+                    select: t => new GenericEntityDto
+                    {
+                        Id = t.Id,
+                        Name = t.TransmissionLocales.SingleOrDefault(tl => tl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> transmissionDtos = _mapper.Map<List<GenericEntityDto>>(transmissions);
-                return transmissionDtos;
+               return transmissionDtos;
             }
             catch (Exception)
             {

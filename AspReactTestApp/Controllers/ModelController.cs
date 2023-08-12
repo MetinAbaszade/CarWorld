@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Services.ModelService;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using AspReactTestApp.Dto;
 
 namespace AspReactTestApp.Controllers
 {
@@ -32,8 +33,8 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getmodels")]
-        public async Task<ActionResult<List<Model>>> GetModels(int brandId)
+        [HttpGet("getmodels/{brandId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetModels(int brandId)
         {
             var modelList = await _modelService.GetModelsByBrandId(brandId);
             return modelList;

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using AspReactTestApp.Services.FueltypeService;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Dto;
+using TurboazFetching.Entities;
 
 namespace AspReactTestApp.Controllers
 {
@@ -33,10 +34,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getfueltypes")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetFuelTypes()
+        [HttpGet("getfueltypes/{languageId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetFuelTypes(int languageId)
         {
-            var fuelTypeList = await _fuelTypeService.GetAllFuelTypes();
+            var fuelTypeList = await _fuelTypeService.GetAllFuelTypes(languageId);
             return fuelTypeList;
         }
     }

@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.TransmissionService
     {
         public Task<ResponseDto> AddTransmission(Transmission transmission);
         public Task<ResponseDto> RemoveTransmissionById(int Id);
-        public Task<List<GenericEntityDto>> GetAllTransmissions(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllTransmissions(int languageId);
     }
 }

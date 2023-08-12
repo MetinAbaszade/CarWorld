@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.FueltypeService
     {
         public Task<ResponseDto> AddFuelType(FuelType fuelType);
         public Task<ResponseDto> RemoveFuelTypeById(int Id);
-        public Task<List<GenericEntityDto>> GetAllFuelTypes(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllFuelTypes(int languageId);
     }
 }

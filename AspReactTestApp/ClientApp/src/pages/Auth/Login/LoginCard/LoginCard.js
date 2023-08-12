@@ -23,8 +23,8 @@ export default function LoginCard() {
 
     return (
         <form className="login-form" onSubmit={formik.handleSubmit}>
-            <div>
-                <img className="w-96" src="/UserLogo2.jpeg" alt="UserLogo" />
+            <div className="w-96">
+                <img className="mx-auto" src="/UserLogo2.jpeg" alt="UserLogo" />
                </div>
             <h2 className="text-center font-mono text-2xl">CarUniverse</h2>
             <div className="username mt-3">
@@ -38,12 +38,12 @@ export default function LoginCard() {
                     onBlur={formik.handleBlur}
                     value={formik.values.userName}
                 ></input>
-                <label className={`text-danger ${formik.errors.userName ? "visible" : ""}`}>
+                <label className={`text-danger ps-2 ${formik.errors.userName ? "visible" : ""}`}>
                     {formik.errors.userName}
                 </label>
             </div>
 
-            <div className={`${formik.errors.userName ? "w-100" : "mt-4 w-100"}`}>
+            <div className={`${formik.errors.userName ? "w-100" : "w-100"}`}>
                 <input
                     type="password"
                     name="password"
@@ -54,11 +54,10 @@ export default function LoginCard() {
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
                 />
-                <label className={`text-danger ${formik.errors.password ? "visible" : ""}`}>
+                <label className={`text-danger ps-2 ${formik.errors.password ? "visible" : ""}`}>
                     {formik.errors.password}
                 </label>
             </div>
-
 
             <button className="control mt-4" type="submit" onClick={LoginButtonClick}>
                 {loading ? (
@@ -67,8 +66,9 @@ export default function LoginCard() {
                     "Next"
                 )}
             </button>
+
             <div className="text-center mt-2">
-                <NavLink to="/auth/register">Join Now</NavLink>
+                <NavLink to="/auth/register" className="text-xl font-bold hover:text-red-600">Join Now</NavLink>
             </div>
         </form >
     )

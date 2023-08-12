@@ -1,8 +1,9 @@
+import { useSelector } from "react-redux";
 
 
-export async function GetTransmissions() {
+export async function GetTransmissions(languageid) {
     try {
-        const response = await fetch('api/Transmission/gettransmissions', {
+        const response = await fetch(`api/Transmission/gettransmissions/${languageid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

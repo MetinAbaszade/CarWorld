@@ -56,17 +56,18 @@ namespace AspReactTestApp.Services.CategoryService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllCategories(string language)
+        public async Task<List<GenericEntityDto>> GetAllCategories(int languageId)
         {
             try
             {
-                var categories = await _categoryRepository.GetList(
-                    filter: c => c.CategoryLocales.Any(cl => cl.Language.LanguageName == language),
-                    orderBy: null,
-                    include: source => source.Include(c => c.CategoryLocales));
+                var categoryDtos = await _categoryRepository.Select(
+                    select: c => new GenericEntityDto
+                    {
+                        Id = c.Id,
+                        Name = c.CategoryLocales.SingleOrDefault(cl => cl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> categoryDtos = _mapper.Map<List<GenericEntityDto>>(categories);
-                return categoryDtos;
+               return categoryDtos;
             }
             catch (Exception)
             {

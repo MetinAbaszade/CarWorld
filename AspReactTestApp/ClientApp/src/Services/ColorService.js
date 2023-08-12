@@ -1,8 +1,9 @@
 
 
-export async function GetColors() {
+
+export async function GetColors(languageid) {
     try {
-        const response = await fetch('api/Color/getcolors', {
+        const response = await fetch(`api/Color/getcolors/${languageid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

@@ -549,7 +549,6 @@ namespace AspReactTestApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -560,7 +559,7 @@ namespace AspReactTestApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TokenExpires")
+                    b.Property<DateTime?>("TokenExpires")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")

@@ -9,6 +9,10 @@ namespace AspReactTestApp.Mappings
     {
         public EntityToGenericEntityDtoMappingProfile()
         {
+            CreateMap<Model, GenericEntityDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
             CreateMap<Category, GenericEntityDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryLocales.FirstOrDefault().Name));

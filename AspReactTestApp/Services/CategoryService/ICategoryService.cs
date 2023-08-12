@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.CategoryService
     {
         public Task<ResponseDto> AddCategory(Category category);
         public Task<ResponseDto> RemoveCategoryById(int Id);
-        public Task<List<GenericEntityDto>> GetAllCategories(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllCategories(int languageId);
     }
 }

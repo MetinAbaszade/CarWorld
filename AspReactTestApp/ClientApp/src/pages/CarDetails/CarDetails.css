@@ -1,0 +1,25 @@
+.alice-carousel__dots-item{
+    background-color: black!important;
+}
+
+.alice-carousel__dots-item.__active{
+    background: white !important;
+}
+
+.carousel-wrapper {
+  height: 500px; /* Adjust this height to your liking */
+  background-color: red !important;
+}
+
+.carousel-image-container {
+   height: 500px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.carousel-image-item {
+    margin: auto !important;
+  max-height: 100% !important;
+  max-width: 100% !important;
+}

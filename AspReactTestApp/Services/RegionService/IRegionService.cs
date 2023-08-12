@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.RegionService
     {
         public Task<ResponseDto> AddRegion(Region region);
         public Task<ResponseDto> RemoveRegionById(int Id);
-        public Task<List<GenericEntityDto>> GetAllRegions(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllRegions(int languageId);
     }
 }

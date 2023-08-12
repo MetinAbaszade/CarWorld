@@ -1,6 +1,7 @@
 ﻿using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.DTOs;
 using AspReactTestApp.Entities.Concrete.CarRelated;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspReactTestApp.Services.AutoSalonService
 {
@@ -51,11 +52,14 @@ namespace AspReactTestApp.Services.AutoSalonService
             return responseDto;
         }
 
-        public async Task<List<AutoSalon>> GetAllAutoSalons(string language)
+        public async Task<List<AutoSalon>> GetAllAutoSalons(int languageId)
         {
             try
             {
-                var autoSalons = await _autoSalonRepository.GetList();
+                var autoSalons = await _autoSalonRepository.GetList(
+                     filter: s => s.AutoSalonLocales.Any(sl => sl.LanguageId == languageId),
+                     orderBy: null,
+                     include: source => source.Include(s => s.AutoSalonLocales));
                 return autoSalons;
             }
             catch (Exception)

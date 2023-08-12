@@ -56,17 +56,18 @@ namespace AspReactTestApp.Services.FeatureService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllFeatures(string language)
+        public async Task<List<GenericEntityDto>> GetAllFeatures(int languageId)
         {
             try
             {
-                var features = await _featureRepository.GetList(
-                    filter: c => c.FeatureLocales.Any(fl => fl.Language.DisplayName == language),
-                    orderBy: null,
-                    include: source => source.Include(f => f.FeatureLocales));
+                var featureDtos = await _featureRepository.Select(
+                    select: f => new GenericEntityDto
+                    {
+                        Id = f.Id,
+                        Name = f.FeatureLocales.SingleOrDefault(fl => fl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> featureDtos = _mapper.Map<List<GenericEntityDto>>(features);
-                return featureDtos;
+               return featureDtos;
             }
             catch (Exception)
             {

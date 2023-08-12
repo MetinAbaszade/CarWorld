@@ -5,6 +5,7 @@ import { classNames } from './classNames';
 import './Select.css'
 
 export const Select = ({ options, label, onChange }) => {
+    console.log(options)
     const [value, setValue] = useState('');
     const [open, setOpen] = useState(false);
 
@@ -38,7 +39,7 @@ export const Select = ({ options, label, onChange }) => {
                     key={i}
                     className='ps-3 py-1 cursor-pointer text-neutral-600 hover:bg-neutral-300'
                     onClick={() => {
-                        onChange(o.value);
+                        onChange(o.id);
                         setValue(o.name);
                         setOpen(false);
                     }}
@@ -76,7 +77,7 @@ export const Select = ({ options, label, onChange }) => {
                 />
                 {/* <label htmlFor={`input-${id}`} className={`floating-label bg-zinc-100 ${value && 'active'}`}>{label}</label> */}
 
-                <img onClick={() => setOpen((open) => !open)} src='/arrow svg.svg' alt='Description of the image' className={`transition-transform border-0 ${open ? 'rotate-0' : '-rotate-180'} `} />
+                <img onClick={() => setOpen((open) => !open)} src='/arrow svg.svg'  className={`transition-transform border-0 ${open ? 'rotate-0' : '-rotate-180'} `} />
             </div>
             <div
                 id='options'

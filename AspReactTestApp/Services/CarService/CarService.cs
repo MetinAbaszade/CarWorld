@@ -72,6 +72,7 @@ namespace AspReactTestApp.Services.CarService
                         Color = c.Color.ColorLocales.FirstOrDefault().Name,
                         Market = c.Market.MarketLocales.FirstOrDefault().Name,
                         Region = c.Region.RegionLocales.FirstOrDefault().Name,
+                        CategoryId = c.CategoryId,
                         Category = c.Category.CategoryLocales.FirstOrDefault().Name,
                         FuelType = c.Fueltype.FuelTypeLocales.FirstOrDefault().Name,
                         GearType = c.GearType.GearTypeLocales.FirstOrDefault().Name,
@@ -97,6 +98,22 @@ namespace AspReactTestApp.Services.CarService
                         AutoSalonDescription = c.AutoSalon.AutoSalonLocales.FirstOrDefault().Description,
                         AutoSalonLocation = c.AutoSalon.AutoSalonLocales.FirstOrDefault().Location
                     });
+
+                List<Car> relatedCars =
+                       await _carDal.GetListWithPagination(pageNumber: 1,
+                                                           pageSize: 20,
+                                                           filter: c => c.CategoryId == carDetailsDto.CategoryId && c.Id != id,
+                                                           orderBy: null,
+                                                           include: source => source.Include((c) => c.Brand)
+                                                                                    .Include((c) => c.Year)
+                                                                                    .Include((c) => c.Model)
+                                                                                    .Include((c) => c.Images)
+                                                                                    .Include((c) => c.Currency)
+                                                                                    .Include((c) => c.MileageType)
+                                                                                    .Include((c) => c.Region).ThenInclude(r => r.RegionLocales));
+
+                List<CarDto> relatedCarDtos = _mapper.Map<List<Car>, List<CarDto>>(relatedCars);
+                carDetailsDto.RelatedCars = relatedCarDtos;
                 return carDetailsDto;
             }
             catch (Exception)
@@ -142,6 +159,8 @@ namespace AspReactTestApp.Services.CarService
                                                                                  .Include((c) => c.Currency)
                                                                                  .Include((c) => c.MileageType)
                                                                                  .Include((c) => c.Region).ThenInclude(r => r.RegionLocales));
+
+
                 List<CarDto> carDtos = _mapper.Map<List<Car>, List<CarDto>>(cars);
                 return carDtos;
             }

@@ -33,10 +33,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("gettransmissions")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetTransmissions()
+        [HttpGet("gettransmissions/{languageId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetTransmissions(int languageId)
         {
-            var transmissionList = await _transmissionService.GetAllTransmissions();
+            var transmissionList = await _transmissionService.GetAllTransmissions(languageId);
             return transmissionList;
         }
     }

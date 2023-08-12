@@ -56,16 +56,17 @@ namespace AspReactTestApp.Services.RegionService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllRegions(string language)
+        public async Task<List<GenericEntityDto>> GetAllRegions(int languageId)
         {
             try
             {
-                var regions = await _regionRepository.GetList(
-                    filter: c => c.RegionLocales.Any(fl => fl.Language.DisplayName == language),
-                    orderBy: null,
-                    include: source => source.Include(r => r.RegionLocales));
+                var regionDtos = await _regionRepository.Select(
+                    select: r => new GenericEntityDto
+                    {
+                        Id = r.Id,
+                        Name = r.RegionLocales.SingleOrDefault(rl => rl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> regionDtos = _mapper.Map<List<GenericEntityDto>>(regions);
                 return regionDtos;
             }
             catch (Exception)

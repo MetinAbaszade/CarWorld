@@ -47,8 +47,16 @@ body {
 }
 
 .primary-container {
-  height: 100vh;
   width: 100%;
+  height: 750px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.login-primary-container {
+  width: 100%;
+  height: 610px;
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -87,7 +95,6 @@ body {
 
 
 .login-card {
-  height: auto;
   padding: 8px 27px 30px;
   backdrop-filter: blur(10px);
   border-radius: 0 15px 15px 0;

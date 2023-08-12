@@ -1,8 +1,9 @@
+import { useSelector } from "react-redux";
 
 
-export async function GetRegions() {
+export async function GetRegions(languageid) {
     try {
-        const response = await fetch('api/Region/getregions', {
+        const response = await fetch(`api/Region/getregions/${languageid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,12 +1,8 @@
 
-export function getUser() {
-    return JSON.parse(localStorage.getItem('User'));
-}
 
 export async function Login(userName, password) {
-    var response;
     try {
-        await fetch('api/Auth/login', {
+        const response = await fetch('api/Auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -16,15 +12,29 @@ export async function Login(userName, password) {
                 'Password': password
             })
 
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while logging in:', error.message);
-            });
+        });
 
-        return response;
+        var authResponse = response.json();
+        return authResponse;
+    }
+    catch (error) {
+        console.log('Error occured while logging in: ' + error.message);
+    }
+}
+
+export async function Logout() {
+    try {
+        const response = await fetch('api/Auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        var authResponse = await response.json();
+        console.log(authResponse);
+        return authResponse;
     }
     catch (error) {
         console.log('Error occured while logging in: ' + error.message);
@@ -32,7 +42,6 @@ export async function Login(userName, password) {
 }
 
 export async function Register(name, surname, userName, email, profileImage, password, retypePassword) {
-    var response;
     try {
         const formData = new FormData();
         formData.append('Name', name);
@@ -42,18 +51,14 @@ export async function Register(name, surname, userName, email, profileImage, pas
         formData.append('Password', password);
         formData.append('RetypePassword', retypePassword);
 
-        await fetch('api/Users/register', {
+        const response = await fetch('api/Users/register', {
             method: 'POST',
             body: formData
 
-        }).then(response => response.json())
-            .then(responseJson => {
-                response = responseJson;
-            }).catch(error => {
-                console.error('Error occured while registering user:', error.message);
-            });
-
-        return response;
+        });
+        
+        var authResponse = await response.json();
+        return authResponse;
     }
     catch (error) {
         console.log('Error occured while registering user: ' + error.message);
@@ -98,23 +103,17 @@ export async function CheckIsUserAuthenticated() {
 }
 
 export async function SendVerificationCode(recipientEmail) {
-    var response;
     try {
-        await fetch('api/Emails/sendverificationcode', {
+        const response = await fetch('api/Emails/sendverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(recipientEmail)
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while sending VerificationCode:', error.message);
-            });;
-
-        return response;
+        });
+        
+        var authResponse = await response.json();
+        return authResponse;
     }
     catch (error) {
         console.log('Error occured while sending VerificationCode: ' + error.message);
@@ -122,9 +121,8 @@ export async function SendVerificationCode(recipientEmail) {
 }
 
 export async function CheckVerificationCode(email, verificationCode) {
-    var response;
     try {
-        await fetch('api/Emails/checkverificationcode', {
+        const response = await fetch('api/Emails/checkverificationcode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -133,14 +131,10 @@ export async function CheckVerificationCode(email, verificationCode) {
                 'Email': email,
                 'VerificationCode': verificationCode
             })
-        }).then(response => response.json())
-            .then(authResponse => {
-                console.log(authResponse);
-                response = authResponse;
-            }).catch(error => {
-                console.error('Error occured while checking VerificationCode:', error.message);
-            });;
-        return response;
+        });
+        
+        var authResponse = await response.json();
+        return authResponse;
     }
     catch (error) {
         console.log('Error occured while checking VerificationCode: ' + error.message);

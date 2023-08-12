@@ -1,8 +1,9 @@
+import { useSelector } from "react-redux";
 
 
-export async function GetFueltypes() {
+export async function GetFueltypes(languageid) {
     try {
-        const response = await fetch('api/Fueltype/getfueltypes', {
+        const response = await fetch(`api/Fueltype/getfueltypes/${languageid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

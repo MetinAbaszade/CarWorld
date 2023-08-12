@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './VerificationInput.css'
 
 export default function VerificationInput({ handlePrevSlide, formik }) {
+    const [isLoading, setIsLoading] = useState(false);
     const inputRefs = Array.from({ length: 6 }, () => React.createRef());
 
     const handleInput = (e, index, nextInput) => {
@@ -26,9 +27,15 @@ export default function VerificationInput({ handlePrevSlide, formik }) {
         }
     };
 
+    async function SubmitButtonClick() {
+        setIsLoading(true);
+        await formik.submitForm();
+        setIsLoading(false);
+    }
+
     return (
         <div className='d-flex flex-column'>
-            <div className="verification-code">
+            <div className="verification-code mt-2">
                 {inputRefs.map((inputRef, index) => (
                     <input
                         key={index}
@@ -46,7 +53,13 @@ export default function VerificationInput({ handlePrevSlide, formik }) {
             </label>
             <div className="d-flex">
                 <button className="control w-25 mx-2 mt-4" type="button" onClick={handlePrevSlide}>&larr;</button>
-                <button className="control" type="submit">Submit Code</button>
+                <button className="control mt-4 disabled" type="button" onClick={SubmitButtonClick}>
+                {isLoading ? (
+                    <div className="spinner visible text-center m-auto"></div>
+                ) : (
+                    "Submit Code"
+                )}
+               </button>
             </div>
         </div>
     );

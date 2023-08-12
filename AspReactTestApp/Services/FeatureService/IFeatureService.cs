@@ -8,6 +8,6 @@ namespace AspReactTestApp.Services.FeatureService
     {
         public Task<ResponseDto> AddFeature(Feature feature);
         public Task<ResponseDto> RemoveFeatureById(int Id);
-        public Task<List<GenericEntityDto>> GetAllFeatures(string language = "Az");
+        public Task<List<GenericEntityDto>> GetAllFeatures(int languageId);
     }
 }

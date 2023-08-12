@@ -7,7 +7,7 @@ namespace AspReactTestApp.Services.AutoSalonService
     {
         public Task<ResponseDto> AddAutoSalon(AutoSalon autoSalon);
         public Task<ResponseDto> RemoveAutoSalonById(int Id);
-        public Task<List<AutoSalon>> GetAllAutoSalons(string language = "Az");
+        public Task<List<AutoSalon>> GetAllAutoSalons(int languageId);
         public Task<List<AutoSalon>> GetAutoSalonsWithPagination(int pageNumber = 1, int pageSize = 20);
     }
 }

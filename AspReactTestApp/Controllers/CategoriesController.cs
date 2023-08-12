@@ -33,10 +33,10 @@ namespace AspReactTestApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getcategories")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetCategories()
+        [HttpGet("getcategories/{languageId}")]
+        public async Task<ActionResult<List<GenericEntityDto>>> GetCategories(int languageId)
         {
-            var categoriesList = await _categoryService.GetAllCategories();
+            var categoriesList = await _categoryService.GetAllCategories(languageId);
             return categoriesList;
         }
     }

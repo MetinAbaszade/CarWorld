@@ -60,16 +60,17 @@ namespace AspReactTestApp.Services.ColorService
             return responseDto;
         }
 
-        public async Task<List<GenericEntityDto>> GetAllColors(string language)
+        public async Task<List<GenericEntityDto>> GetAllColors(int languageId)
         {
             try
             {
-                var colors = await _colorRepository.GetList(
-                    filter: c => c.ColorLocales.Any(cl => cl.Language.DisplayName == language),
-                    orderBy: null,
-                    include: source => source.Include(c => c.ColorLocales));
+                var colorDtos = await _colorRepository.Select(
+                    select: c => new GenericEntityDto
+                    {
+                        Id = c.Id,
+                        Name = c.ColorLocales.SingleOrDefault(cl => cl.LanguageId == languageId).Name
+                    });
 
-                List<GenericEntityDto> colorDtos = _mapper.Map<List<GenericEntityDto>>(colors);
                 return colorDtos;
             }
             catch (Exception)

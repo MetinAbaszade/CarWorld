@@ -131,7 +131,7 @@ export default function RegisterCard() {
         <form className="login-form" onSubmit={formik.handleSubmit}>
             <ProfileImageComponent setSelectedImage={setSelectedImage} />
 
-            <h2 className="text-center">Create Account</h2>
+            <h2 className="text-center font-mono text-2xl">Create Account</h2>
             <Swiper
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 ref={swiperRef}
@@ -224,13 +224,13 @@ export default function RegisterCard() {
                     </div>
 
                     <button className="control" type="button" onClick={handleNextSlide}>Next</button>
-                    <div className="text-center mt-2">
-                        <NavLink to="/auth/login">Already have an account</NavLink>
+                    <div className="text-center mt-1">
+                        <NavLink to="/auth/login" className="text-md font-bold hover:text-red-600">Already have an account</NavLink>
                     </div>
                 </SwiperSlide>
 
                 <SwiperSlide>
-                    <div>
+                    <div className="mt-4">
                         <input
                             className="control mb-0"
                             type="email"
@@ -242,7 +242,7 @@ export default function RegisterCard() {
                             value={formik.values.email}
                         />
                     </div>
-                    <label className={`text-danger ${formik.errors.email ? "visible" : ""}`}>
+                    <label className={`text-danger ps-2${formik.errors.email ? "visible" : ""}`}>
                         {formik.errors.email}
                     </label>
                     <div className="d-flex">

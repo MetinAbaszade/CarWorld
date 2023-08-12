@@ -21,25 +21,48 @@ namespace AspReactTestApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseDto>> Login(LoginUserDto request)
         {
-            var (response, tokens) = await _authService.LoginUser(request);
+            var (response, token) = await _authService.LogInUser(request);
 
             if (response.IsSuccessfull)
             {
-                var cookieOptions = new CookieOptions
+                var accessTokenCookieOptions = new CookieOptions
                 {
                     Secure = true, // cookie is to be transmitted over https only
                     HttpOnly = true,
-                    Expires = tokens.TokenExpires,
+                    Expires = token.AccessTokenExpires,
+                    SameSite = SameSiteMode.Strict
+                };
+
+                var refreshTokenCookieOptions = new CookieOptions
+                {
+                    Secure = true, // cookie is to be transmitted over https only
+                    HttpOnly = true,
+                    Expires = token.RefreshTokenExpires,
                     SameSite = SameSiteMode.Strict
                 };
 
                 // Set access token in cookie
-                Response.Cookies.Append("access_token", tokens.AccessToken, cookieOptions);
+                Response.Cookies.Append("access_token", token.AccessToken, accessTokenCookieOptions);
+                // Set refresh token in cookie
+                Response.Cookies.Append("refresh_token", token.RefreshToken, refreshTokenCookieOptions);
 
                 return Ok(response);
             }
 
             return NotFound(response);
+        }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult<ResponseDto>> Logout()
+        {
+            var responseDto = await _authService.LogOutUser();
+
+            if (responseDto.IsSuccessfull)
+            {
+                return Ok(responseDto);
+            }
+
+            return NotFound(responseDto);
         }
 
         [HttpPost("checkuserexists")]
@@ -81,16 +104,27 @@ namespace AspReactTestApp.Controllers
 
             if (response.IsSuccessfull)
             {
-                var cookieOptions = new CookieOptions
+                var accessTokenCookieOptions = new CookieOptions
                 {
                     Secure = true, // cookie is to be transmitted over https only
                     HttpOnly = true,
-                    Expires = tokens.TokenExpires,
+                    Expires = tokens.AccessTokenExpires,
+                    SameSite = SameSiteMode.Strict
+                };
+
+                var refreshTokenCookieOptions = new CookieOptions
+                {
+                    Secure = true, // cookie is to be transmitted over https only
+                    HttpOnly = true,
+                    Expires = tokens.RefreshTokenExpires,
                     SameSite = SameSiteMode.Strict
                 };
 
                 // Set access token in cookie
-                Response.Cookies.Append("access_token", tokens.AccessToken, cookieOptions);
+                Response.Cookies.Append("access_token", tokens.AccessToken, accessTokenCookieOptions);
+                // Set refresh token in cookie
+                Response.Cookies.Append("refresh_token", tokens.RefreshToken, refreshTokenCookieOptions);
+
                 return Ok(response);
             }
 
