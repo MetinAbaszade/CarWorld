@@ -1,13 +1,11 @@
-﻿using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.ColorService
+namespace AspReactTestApp.Services.ColorService;
+
+public interface IColorService
 {
-    public interface IColorService
-    {
-        public Task<ResponseDto> AddColor(Color color);
-        public Task<ResponseDto> RemoveColorById(int Id);
-        public Task<List<GenericEntityDto>> GetAllColors(int languageId);
-    }
+    public Task<ResponseDTO> AddColor(Color color);
+    public Task<ResponseDTO> RemoveColorById(int Id);
+    public Task<List<GenericEntityDTO>> GetAllColors(int languageId);
 }

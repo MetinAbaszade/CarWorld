@@ -1,50 +1,49 @@
-﻿using AspReactTestApp.Dto;
+﻿using AutoMapper;
+using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
-using AutoMapper;
 using TurboazFetching.Entities;
 
-namespace AspReactTestApp.Mappings
+namespace AspReactTestApp.Mappings;
+
+public class EntityToGenericEntityDTOMappingProfile : Profile
 {
-    public class EntityToGenericEntityDtoMappingProfile : Profile
+    public EntityToGenericEntityDTOMappingProfile()
     {
-        public EntityToGenericEntityDtoMappingProfile()
-        {
-            CreateMap<Model, GenericEntityDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+        CreateMap<Model, GenericEntityDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
 
-            CreateMap<Category, GenericEntityDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryLocales.FirstOrDefault().Name));
+        CreateMap<Category, GenericEntityDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CategoryLocales.FirstOrDefault().Name));
 
-            CreateMap<Color, GenericEntityDto>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ColorLocales.FirstOrDefault().Name));
+        CreateMap<Color, GenericEntityDTO>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ColorLocales.FirstOrDefault().Name));
 
-            CreateMap<Feature, GenericEntityDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FeatureLocales.FirstOrDefault().Name));
+        CreateMap<Feature, GenericEntityDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FeatureLocales.FirstOrDefault().Name));
 
-            CreateMap<FuelType, GenericEntityDto>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FuelTypeLocales.FirstOrDefault().Name));
+        CreateMap<FuelType, GenericEntityDTO>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FuelTypeLocales.FirstOrDefault().Name));
 
-            CreateMap<GearType, GenericEntityDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GearTypeLocales.FirstOrDefault().Name));
+        CreateMap<GearType, GenericEntityDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GearTypeLocales.FirstOrDefault().Name));
 
-            CreateMap<Market, GenericEntityDto>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MarketLocales.FirstOrDefault().Name));
+        CreateMap<Market, GenericEntityDTO>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MarketLocales.FirstOrDefault().Name));
 
-            CreateMap<Region, GenericEntityDto>()
-               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.RegionLocales.FirstOrDefault().Name));
+        CreateMap<Region, GenericEntityDTO>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.RegionLocales.FirstOrDefault().Name));
 
-            CreateMap<Transmission, GenericEntityDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.TransmissionLocales.FirstOrDefault().Name));
+        CreateMap<Transmission, GenericEntityDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.TransmissionLocales.FirstOrDefault().Name));
 
-        }
     }
 }

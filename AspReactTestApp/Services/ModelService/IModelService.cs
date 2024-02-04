@@ -1,13 +1,11 @@
-﻿using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.ModelService
+namespace AspReactTestApp.Services.ModelService;
+
+public interface IModelService
 {
-    public interface IModelService
-    {
-        public Task<ResponseDto> AddModel(Model model);
-        public Task<ResponseDto> RemoveModelById(int Id);
-        public Task<List<GenericEntityDto>> GetModelsByBrandId(int brandId);
-    }
+    public Task<ResponseDTO> AddModel(Model model);
+    public Task<ResponseDTO> RemoveModelById(int Id);
+    public Task<List<GenericEntityDTO>> GetModelsByBrandId(int brandId);
 }

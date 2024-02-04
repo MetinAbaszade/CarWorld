@@ -1,78 +1,68 @@
-﻿using AspReactTestApp.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AspReactTestApp.DTO;
 using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Entities.Concrete.CarRelated;
-using AspReactTestApp.Dto;
-using AutoMapper;
 
-namespace AspReactTestApp.Services.CategoryService
+namespace AspReactTestApp.Services.CategoryService;
+
+public class CategoryService(ICategoryRepository categoryRepository) : ICategoryService
 {
-    public class CategoryService : ICategoryService
+    private readonly ICategoryRepository _categoryRepository = categoryRepository;
+
+    public async Task<ResponseDTO> AddCategory(Category category)
     {
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
-
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        ResponseDTO responseDTO = new();
+        try
         {
-            _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            await _categoryRepository.Add(category);
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Category Added Successfully!";
         }
-
-        public async Task<ResponseDto> AddCategory(Category category)
+        catch (Exception ex)
         {
-            ResponseDto responseDto = new();
-            try
-            {
-                await _categoryRepository.Add(category);
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Category Added Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+            responseDTO.Message = ex.Message;
         }
+        return responseDTO;
+    }
 
-        public async Task<ResponseDto> RemoveCategoryById(int id)
+    public async Task<ResponseDTO> RemoveCategoryById(int id)
+    {
+        ResponseDTO responseDTO = new();
+        try
         {
-            ResponseDto responseDto = new();
-            try
+            var category = await _categoryRepository.Get(c => c.Id == id);
+            if (category != null)
             {
-                var category = await _categoryRepository.Get(c => c.Id == id);
-                if (category != null)
+                await _categoryRepository.Delete(category);
+                responseDTO.Message = "Category Not Found!";
+                return responseDTO;
+            }
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Category Removed Successfully!";
+        }
+        catch (Exception ex)
+        {
+            responseDTO.Message = ex.Message;
+        }
+        return responseDTO;
+    }
+
+    public async Task<List<GenericEntityDTO>> GetAllCategories(int languageId)
+    {
+        try
+        {
+            var categoryDTOs = await _categoryRepository.Select(
+                select: c => new GenericEntityDTO
                 {
-                    await _categoryRepository.Delete(category);
-                    responseDto.Message = "Category Not Found!";
-                    return responseDto;
-                }
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Category Removed Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+                    Id = c.Id,
+                    Name = c.CategoryLocales.SingleOrDefault(cl => cl.LanguageId == languageId).Name
+                });
+
+           return categoryDTOs;
         }
-
-        public async Task<List<GenericEntityDto>> GetAllCategories(int languageId)
+        catch (Exception)
         {
-            try
-            {
-                var categoryDtos = await _categoryRepository.Select(
-                    select: c => new GenericEntityDto
-                    {
-                        Id = c.Id,
-                        Name = c.CategoryLocales.SingleOrDefault(cl => cl.LanguageId == languageId).Name
-                    });
-
-               return categoryDtos;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
     }
 }

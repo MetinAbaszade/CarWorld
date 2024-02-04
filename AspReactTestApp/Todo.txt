@@ -1,0 +1,6 @@
+﻿
+
+
+1. Fluent Validation implementation
+2. https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/general-naming-conventions
+3. What is Generic Entity DTO?

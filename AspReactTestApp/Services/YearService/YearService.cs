@@ -1,67 +1,61 @@
-﻿using AspReactTestApp.Data.DataAccess.Abstract;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
+using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.YearService
+namespace AspReactTestApp.Services.YearService;
+
+public class YearService(IYearRepository yearRepository) : IYearService
 {
-    public class YearService : IYearService
+    private readonly IYearRepository _yearRepository = yearRepository;
+
+    public async Task<ResponseDTO> AddYear(Year year)
     {
-        private readonly IYearRepository _yearRepository;
-
-        public YearService(IYearRepository yearRepository)
+        ResponseDTO responseDTO = new();
+        try
         {
-            _yearRepository = yearRepository;
+            await _yearRepository.Add(year);
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Year Added Successfully!";
         }
-
-        public async Task<ResponseDto> AddYear(Year year)
+        catch (Exception ex)
         {
-            ResponseDto responseDto = new();
-            try
-            {
-                await _yearRepository.Add(year);
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Year Added Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+            responseDTO.Message = ex.Message;
         }
+        return responseDTO;
+    }
 
-        public async Task<ResponseDto> RemoveYearById(int id)
+    public async Task<ResponseDTO> RemoveYearById(int id)
+    {
+        ResponseDTO responseDTO = new();
+        try
         {
-            ResponseDto responseDto = new();
-            try
+            var year = await _yearRepository.Get(y => y.Id == id);
+            if (year != null)
             {
-                var year = await _yearRepository.Get(y => y.Id == id);
-                if (year != null)
-                {
-                    await _yearRepository.Delete(year);
-                    responseDto.Message = "Year Not Found!";
-                    return responseDto;
-                }
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Year Removed Successfully!";
+                await _yearRepository.Delete(year);
+                responseDTO.Message = "Year Not Found!";
+                return responseDTO;
             }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Year Removed Successfully!";
         }
-
-        public async Task<List<Year>> GetAllYears()
+        catch (Exception ex)
         {
-            try
-            {
-                var years = await _yearRepository.GetList();
-                return years;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            responseDTO.Message = ex.Message;
+        }
+        return responseDTO;
+    }
+
+    public async Task<List<Year>> GetAllYears()
+    {
+        try
+        {
+            var years = await _yearRepository.GetList();
+            return years;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }

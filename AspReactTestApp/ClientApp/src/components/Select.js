@@ -5,7 +5,6 @@ import { classNames } from './classNames';
 import './Select.css'
 
 export const Select = ({ options, label, onChange }) => {
-    console.log(options)
     const [value, setValue] = useState('');
     const [open, setOpen] = useState(false);
 

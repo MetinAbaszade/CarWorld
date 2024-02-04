@@ -1,78 +1,67 @@
-﻿using AspReactTestApp.Data.DataAccess.Abstract;
-using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
+using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Entities.Concrete.CarRelated;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
-namespace AspReactTestApp.Services.TransmissionService
+namespace AspReactTestApp.Services.TransmissionService;
+
+public class TransmissionService(ITransmissionRepository transmissionRepository) : ITransmissionService
 {
-    public class TransmissionService : ITransmissionService
+    private readonly ITransmissionRepository _transmissionRepository = transmissionRepository;
+
+    public async Task<ResponseDTO> AddTransmission(Transmission transmission)
     {
-        private readonly ITransmissionRepository _transmissionRepository;
-        private readonly IMapper _mapper;
-
-        public TransmissionService(ITransmissionRepository transmissionRepository, IMapper mapper)
+        ResponseDTO responseDTO = new();
+        try
         {
-            _transmissionRepository = transmissionRepository;
-            _mapper = mapper;
+            await _transmissionRepository.Add(transmission);
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Transmission Added Successfully!";
         }
-
-        public async Task<ResponseDto> AddTransmission(Transmission transmission)
+        catch (Exception ex)
         {
-            ResponseDto responseDto = new();
-            try
-            {
-                await _transmissionRepository.Add(transmission);
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Transmission Added Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+            responseDTO.Message = ex.Message;
         }
+        return responseDTO;
+    }
 
-        public async Task<ResponseDto> RemoveTransmissionById(int id)
+    public async Task<ResponseDTO> RemoveTransmissionById(int id)
+    {
+        ResponseDTO responseDTO = new();
+        try
         {
-            ResponseDto responseDto = new();
-            try
+            var transmission = await _transmissionRepository.Get(t => t.Id == id);
+            if (transmission != null)
             {
-                var transmission = await _transmissionRepository.Get(t => t.Id == id);
-                if (transmission != null)
+                await _transmissionRepository.Delete(transmission);
+                responseDTO.Message = "Transmission Not Found!";
+                return responseDTO;
+            }
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Transmission Removed Successfully!";
+        }
+        catch (Exception ex)
+        {
+            responseDTO.Message = ex.Message;
+        }
+        return responseDTO;
+    }
+
+    public async Task<List<GenericEntityDTO>> GetAllTransmissions(int languageId)
+    {
+        try
+        {
+            var transmissionDTOs = await _transmissionRepository.Select(
+                select: t => new GenericEntityDTO
                 {
-                    await _transmissionRepository.Delete(transmission);
-                    responseDto.Message = "Transmission Not Found!";
-                    return responseDto;
-                }
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Transmission Removed Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+                    Id = t.Id,
+                    Name = t.TransmissionLocales.SingleOrDefault(tl => tl.LanguageId == languageId).Name
+                });
+
+           return transmissionDTOs;
         }
-
-        public async Task<List<GenericEntityDto>> GetAllTransmissions(int languageId)
+        catch (Exception)
         {
-            try
-            {
-                var transmissionDtos = await _transmissionRepository.Select(
-                    select: t => new GenericEntityDto
-                    {
-                        Id = t.Id,
-                        Name = t.TransmissionLocales.SingleOrDefault(tl => tl.LanguageId == languageId).Name
-                    });
-
-               return transmissionDtos;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
     }
 }

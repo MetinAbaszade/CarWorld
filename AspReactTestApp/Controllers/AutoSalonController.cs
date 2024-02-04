@@ -1,42 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspReactTestApp.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AspReactTestApp.DTOs;
-using AspReactTestApp.Entities.Concrete.CarRelated;
 using AspReactTestApp.Services.AutoSalonService;
+using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Controllers
+namespace AspReactTestApp.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
+public class AutoSalonController(IAutoSalonService autoSalonService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class AutoSalonController : ControllerBase
+    private readonly IAutoSalonService _autoSalonService = autoSalonService;
+
+    [HttpPost("addautosalon")]
+    public async Task<ActionResult<ResponseDTO>> AddAutoSalon(AutoSalon autoSalon)
     {
-        private readonly IAutoSalonService _autoSalonService;
+        var result = await _autoSalonService.AddAutoSalon(autoSalon);
+        return Ok(result);
+    }
 
-        public AutoSalonController(IAutoSalonService autoSalonService)
-        {
-            _autoSalonService = autoSalonService;
-        }
+    [HttpDelete("deleteautosalon")]
+    public async Task<ActionResult<ResponseDTO>> DeleteAutoSalon(int id)
+    {
+        var result = await _autoSalonService.RemoveAutoSalonById(id);
+        return Ok(result);
+    }
 
-        [HttpPost("addautosalon")]
-        public async Task<ActionResult<ResponseDto>> AddAutoSalon(AutoSalon autoSalon)
-        {
-            var result = await _autoSalonService.AddAutoSalon(autoSalon);
-            return Ok(result);
-        }
-
-        [HttpDelete("deleteautosalon")]
-        public async Task<ActionResult<ResponseDto>> DeleteAutoSalon(int id)
-        {
-            var result = await _autoSalonService.RemoveAutoSalonById(id);
-            return Ok(result);
-        }
-
-        [HttpGet("getautosalons/{languageId}")]
-        public async Task<ActionResult<List<AutoSalon>>> GetAutoSalons(int languageId)
-        {
-            var autosalonList = await _autoSalonService.GetAllAutoSalons(languageId);
-            return autosalonList;
-        }
+    [HttpGet("getautosalons/{languageId}")]
+    public async Task<ActionResult<List<AutoSalon>>> GetAutoSalons(int languageId)
+    {
+        var autosalonList = await _autoSalonService.GetAllAutoSalons(languageId);
+        return autosalonList;
     }
 }

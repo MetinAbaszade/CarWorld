@@ -104,6 +104,7 @@ export async function CheckIsUserAuthenticated() {
 
 export async function SendVerificationCode(recipientEmail) {
     try {
+        console.log("SendVerificationCode un evveli");
         const response = await fetch('api/Emails/sendverificationcode', {
             method: 'POST',
             headers: {
@@ -113,6 +114,7 @@ export async function SendVerificationCode(recipientEmail) {
         });
         
         var authResponse = await response.json();
+        console.log("SendVerificationCode Response: " + response.json());
         return authResponse;
     }
     catch (error) {

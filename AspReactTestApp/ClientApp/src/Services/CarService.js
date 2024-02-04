@@ -1,7 +1,8 @@
 
 
-export async function GetCars(pageNumber = 1, pageSize = 20, sort = "") {
+export async function GetCars(languageId, pageNumber = 1, pageSize = 20, sort = "") {
     try {
+        console.log("Getdim masinlari goturmeye: " + languageId);
         const response = await fetch('api/Cars/getcars', {
             method: 'POST',
             headers: {
@@ -10,7 +11,8 @@ export async function GetCars(pageNumber = 1, pageSize = 20, sort = "") {
             body: JSON.stringify({
                 'PageSize': pageSize, 
                 'PageNumber': pageNumber,
-                'Sort': sort
+                'Sort': sort, 
+                'LanguageId': languageId
             }),
             credentials: 'include'
         })
@@ -30,9 +32,10 @@ export async function GetCars(pageNumber = 1, pageSize = 20, sort = "") {
     }
 }
 
-export async function GetCarDetails(id) {
+export async function GetCarDetails(carId, languageId) {
     try {
-        const response = await fetch(`api/Cars/getcardetails/${id}`, {
+        console.log("Aye burdayam: " + languageId);
+        const response = await fetch(`api/Cars/getcardetails/${carId}/${languageId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

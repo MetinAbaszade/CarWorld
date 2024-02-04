@@ -1,10 +1,9 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 
-namespace AspReactTestApp.Services.UserService
+namespace AspReactTestApp.Services.UserService;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        public Task<bool> CheckUserExists(string userName);
-        public Task<ResponseDto> RegisterUser(RegisterUserDto registerUserDto);
-    }
+    public Task<bool> CheckUserExists(string userName);
+    public Task<ResponseDTO> RegisterUser(RegisterUserDTO registerUserDto);
 }

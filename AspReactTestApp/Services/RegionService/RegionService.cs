@@ -1,78 +1,67 @@
-﻿using AspReactTestApp.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Data.DataAccess.Abstract;
 using AspReactTestApp.Entities.Concrete.CarRelated;
-using AspReactTestApp.Dto;
-using AutoMapper;
 
-namespace AspReactTestApp.Services.RegionService
+namespace AspReactTestApp.Services.RegionService;
+
+public class RegionService(IRegionRepository regionRepository) : IRegionService
 {
-    public class RegionService : IRegionService
+    private readonly IRegionRepository _regionRepository = regionRepository;
+
+    public async Task<ResponseDTO> AddRegion(Region region)
     {
-        private readonly IRegionRepository _regionRepository;
-        private readonly IMapper _mapper;
-
-        public RegionService(IRegionRepository regionRepository, IMapper mapper)
+        ResponseDTO responseDTO = new();
+        try
         {
-            _regionRepository = regionRepository;
-            _mapper = mapper;
+            await _regionRepository.Add(region);
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Region Added Successfully!";
         }
-
-        public async Task<ResponseDto> AddRegion(Region region)
+        catch (Exception ex)
         {
-            ResponseDto responseDto = new();
-            try
-            {
-                await _regionRepository.Add(region);
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Region Added Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+            responseDTO.Message = ex.Message;
         }
+        return responseDTO;
+    }
 
-        public async Task<ResponseDto> RemoveRegionById(int id)
+    public async Task<ResponseDTO> RemoveRegionById(int id)
+    {
+        ResponseDTO responseDTO = new();
+        try
         {
-            ResponseDto responseDto = new();
-            try
+            var region = await _regionRepository.Get(r => r.Id == id);
+            if (region != null)
             {
-                var region = await _regionRepository.Get(r => r.Id == id);
-                if (region != null)
+                await _regionRepository.Delete(region);
+                responseDTO.Message = "Region Not Found!";
+                return responseDTO;
+            }
+            responseDTO.IsSuccessfull = true;
+            responseDTO.Message = "Region Removed Successfully!";
+        }
+        catch (Exception ex)
+        {
+            responseDTO.Message = ex.Message;
+        }
+        return responseDTO;
+    }
+
+    public async Task<List<GenericEntityDTO>> GetAllRegions(int languageId)
+    {
+        try
+        {
+            var regionDTOs = await _regionRepository.Select(
+                select: r => new GenericEntityDTO
                 {
-                    await _regionRepository.Delete(region);
-                    responseDto.Message = "Region Not Found!";
-                    return responseDto;
-                }
-                responseDto.IsSuccessfull = true;
-                responseDto.Message = "Region Removed Successfully!";
-            }
-            catch (Exception ex)
-            {
-                responseDto.Message = ex.Message;
-            }
-            return responseDto;
+                    Id = r.Id,
+                    Name = r.RegionLocales.SingleOrDefault(rl => rl.LanguageId == languageId).Name
+                });
+
+            return regionDTOs;
         }
-
-        public async Task<List<GenericEntityDto>> GetAllRegions(int languageId)
+        catch (Exception)
         {
-            try
-            {
-                var regionDtos = await _regionRepository.Select(
-                    select: r => new GenericEntityDto
-                    {
-                        Id = r.Id,
-                        Name = r.RegionLocales.SingleOrDefault(rl => rl.LanguageId == languageId).Name
-                    });
-
-                return regionDtos;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            throw;
         }
     }
 }

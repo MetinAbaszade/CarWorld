@@ -1,44 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspReactTestApp.DTO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AspReactTestApp.DTOs;
-using AspReactTestApp.Entities.Concrete.CarRelated;
-using AspReactTestApp.Services.FueltypeService;
 using AspReactTestApp.Services.RegionService;
-using AspReactTestApp.Dto;
+using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Controllers
+namespace AspReactTestApp.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
+public class RegionController(IRegionService regionService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class RegionController : ControllerBase
+    private readonly IRegionService _regionService = regionService;
+
+    [HttpPost("addregion")]
+    public async Task<ActionResult<ResponseDTO>> AddRegion(Region region)
     {
-        private readonly IRegionService _regionService;
+        var result = await _regionService.AddRegion(region);
+        return Ok(result);
+    }
 
-        public RegionController(IRegionService regionService)
-        {
-            _regionService = regionService;
-        }
+    [HttpDelete("deleteregion")]
+    public async Task<ActionResult<ResponseDTO>> DeleteRegion(int id)
+    {
+        var result = await _regionService.RemoveRegionById(id);
+        return Ok(result);
+    }
 
-        [HttpPost("addregion")]
-        public async Task<ActionResult<ResponseDto>> AddRegion(Region region)
-        {
-            var result = await _regionService.AddRegion(region);
-            return Ok(result);
-        }
-
-        [HttpDelete("deleteregion")]
-        public async Task<ActionResult<ResponseDto>> DeleteRegion(int id)
-        {
-            var result = await _regionService.RemoveRegionById(id);
-            return Ok(result);
-        }
-
-        [HttpGet("getregions/{languageId}")]
-        public async Task<ActionResult<List<GenericEntityDto>>> GetRegions(int languageId)
-        {
-            var regionList = await _regionService.GetAllRegions(languageId);
-            return regionList;
-        }
+    [HttpGet("getregions/{languageId}")]
+    public async Task<ActionResult<List<GenericEntityDTO>>> GetRegions(int languageId)
+    {
+        var regionList = await _regionService.GetAllRegions(languageId);
+        return regionList;
     }
 }

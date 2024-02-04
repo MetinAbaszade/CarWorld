@@ -1,15 +1,14 @@
-﻿using AspReactTestApp.DTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using AspReactTestApp.DTO;
 
-namespace AspReactTestApp.Validations
+namespace AspReactTestApp.Validations;
+
+public class LoginUserDTOValidator : AbstractValidator<LoginUserDTO>
 {
-    public class LoginUserDtoValidator : AbstractValidator<LoginUserDto>
-    {
-        public LoginUserDtoValidator()
-        { 
-            RuleFor(x => x.UserName).NotEmpty().WithMessage("Username is required");
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required");
-        }
+    public LoginUserDTOValidator()
+    { 
+        RuleFor(x => x.UserName).NotEmpty().WithMessage("Username is required");
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required");
     }
 }

@@ -1,13 +1,11 @@
-﻿using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.FeatureService
+namespace AspReactTestApp.Services.FeatureService;
+
+public interface IFeatureService
 {
-    public interface IFeatureService
-    {
-        public Task<ResponseDto> AddFeature(Feature feature);
-        public Task<ResponseDto> RemoveFeatureById(int Id);
-        public Task<List<GenericEntityDto>> GetAllFeatures(int languageId);
-    }
+    public Task<ResponseDTO> AddFeature(Feature feature);
+    public Task<ResponseDTO> RemoveFeatureById(int Id);
+    public Task<List<GenericEntityDTO>> GetAllFeatures(int languageId);
 }

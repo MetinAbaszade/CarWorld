@@ -1,46 +1,58 @@
-﻿using AspReactTestApp.Entities.Abstract;
+﻿using System.Linq.Expressions;
+using AspReactTestApp.Entities.Abstract;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
-using System.Security.Principal;
 
-namespace AspReactTestApp.Data.Core.Abstract
+namespace AspReactTestApp.Data.Core.Abstract;
+
+public interface IGenericRepository<TEntity> where TEntity : class, IEntity, new()
 {
-    public interface IGenericRepository<TEntity> where TEntity : class, IEntity, new()
-    {
-        Task<TEntity?> Get(Expression<Func<TEntity, bool>>? filter = null,
-                           Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
+    Task<TEntity?> Get(Expression<Func<TEntity, bool>>? filter = null,
+                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
 
-        Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>>? filter = null,
-                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-                                    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
+    Task<List<TEntity>> GetList(Expression<Func<TEntity, bool>>? filter = null,
+                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
 
-        Task<List<TEntity>> GetListWithPagination(
-                                    int? pageNumber,
-                                    int? pageSize,
-                                    Expression<Func<TEntity, bool>>? filter = null,
-                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-                                    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
-        Task<List<TType>> Select<TType>(
-                              Expression<Func<TEntity, bool>>? filter = null,
-                              Expression<Func<TEntity, TType>>? select = null) where TType : class;
+    Task<List<TEntity>> GetListWithPagination(
+                                int? pageNumber,
+                                int? pageSize,
+                                Expression<Func<TEntity, bool>>? filter = null,
+                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null);
 
-        Task<List<TType>> SelectWithPagination<TType>(
-                      int? pageNumber,
-                      int? pageSize,
-                      Expression<Func<TEntity, bool>>? filter = null,
-                      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-                      Expression<Func<TEntity, TType>>? select = null) where TType : class;
+    Task<List<TDto>> GetListWithProjection<TDto>(
+                                IMapper mapper,
+                                int? pageNumber,
+                                int? pageSize,
+                                int languageId,
+                                Expression<Func<TEntity, bool>>? filter = null,
+                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);
+    Task<List<TType>> Select<TType>(
+                          Expression<Func<TEntity, bool>>? filter = null,
+                          Expression<Func<TEntity, TType>>? select = null) where TType : class;
 
-        Task<TType?> SelectSingle<TType>(
-                            Expression<Func<TEntity, bool>>? filter = null,
-                            Expression<Func<TEntity, TType>>? select = null) where TType : class;
+    Task<List<TType>> SelectWithPagination<TType>(
+                  int? pageNumber,
+                  int? pageSize,
+                  Expression<Func<TEntity, bool>>? filter = null,
+                  Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                  Expression<Func<TEntity, TType>>? select = null) where TType : class;
 
-        Task Add(TEntity entity);
+    Task<TType?> SelectSingle<TType>(
+                        Expression<Func<TEntity, bool>>? filter = null,
+                        Expression<Func<TEntity, TType>>? select = null) where TType : class;
 
-        Task Update(TEntity entity);
+    Task<TDto?> SelectSingleWithProjection<TDto>(
+                        IMapper mapper,
+                        int languageId,
+                        Expression<Func<TEntity, bool>>? filter = null) where TDto : class;
 
-        Task Delete(TEntity entity);
+    Task Add(TEntity entity);
 
-        Task DeleteAll();
-    }
+    Task Update(TEntity entity);
+
+    Task Delete(TEntity entity);
+
+    Task DeleteAll();
 }

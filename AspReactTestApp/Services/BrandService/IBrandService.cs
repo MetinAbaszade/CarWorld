@@ -1,12 +1,11 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.BrandService
+namespace AspReactTestApp.Services.BrandService;
+
+public interface IBrandService
 {
-    public interface IBrandService
-    {
-        public Task<ResponseDto> AddBrand(Brand brand);
-        public Task<ResponseDto> RemoveBrandById(int Id);
-        public Task<List<Brand>> GetAllBrands();
-    }
+    public Task<ResponseDTO> AddBrand(Brand brand);
+    public Task<ResponseDTO> RemoveBrandById(int Id);
+    public Task<List<Brand>> GetAllBrands();
 }

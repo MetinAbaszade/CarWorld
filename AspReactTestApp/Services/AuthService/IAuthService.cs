@@ -1,14 +1,11 @@
-﻿using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
-using AspReactTestApp.Entities.Concrete;
+﻿using AspReactTestApp.DTO;
 
-namespace AspReactTestApp.Services.AuthService
+namespace AspReactTestApp.Services.AuthService;
+
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        public Task<(ResponseDto, TokenDto)> LogInUser(LoginUserDto request);
-        public Task<ResponseDto> LogOutUser();
-        public Task<(ResponseDto, TokenDto)> RefreshToken();
-        public bool IsUserAuthenticated();
-    }
+    public Task<(ResponseDTO, TokenDTO)> LogInUser(LoginUserDTO request);
+    public Task<ResponseDTO> LogOutUser();
+    public Task<(ResponseDTO, TokenDTO)> RefreshToken();
+    public bool IsUserAuthenticated();
 }

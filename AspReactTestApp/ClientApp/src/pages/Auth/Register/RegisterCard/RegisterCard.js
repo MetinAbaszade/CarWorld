@@ -72,7 +72,6 @@ export default function RegisterCard() {
 
         // For each page, we have different schemas and values to validate
         if (activeIndex === 0) {
-            console.log(formik.errors)
             // If Username exists, then immediately return
             if (await checkUsernameExistsandUpdateUI(formik.values.userName)) {
                 return;

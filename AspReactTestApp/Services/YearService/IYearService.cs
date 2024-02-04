@@ -1,12 +1,11 @@
-﻿using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.YearService
+namespace AspReactTestApp.Services.YearService;
+
+public interface IYearService
 {
-    public interface IYearService
-    {
-        public Task<ResponseDto> AddYear(Year year);
-        public Task<ResponseDto> RemoveYearById(int Id);
-        public Task<List<Year>> GetAllYears();
-    }
+    public Task<ResponseDTO> AddYear(Year year);
+    public Task<ResponseDTO> RemoveYearById(int Id);
+    public Task<List<Year>> GetAllYears();
 }

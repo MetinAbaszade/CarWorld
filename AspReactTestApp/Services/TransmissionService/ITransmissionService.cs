@@ -1,13 +1,11 @@
-﻿using AspReactTestApp.Dto;
-using AspReactTestApp.DTOs;
+﻿using AspReactTestApp.DTO;
 using AspReactTestApp.Entities.Concrete.CarRelated;
 
-namespace AspReactTestApp.Services.TransmissionService
+namespace AspReactTestApp.Services.TransmissionService;
+
+public interface ITransmissionService
 {
-    public interface ITransmissionService
-    {
-        public Task<ResponseDto> AddTransmission(Transmission transmission);
-        public Task<ResponseDto> RemoveTransmissionById(int Id);
-        public Task<List<GenericEntityDto>> GetAllTransmissions(int languageId);
-    }
+    public Task<ResponseDTO> AddTransmission(Transmission transmission);
+    public Task<ResponseDTO> RemoveTransmissionById(int Id);
+    public Task<List<GenericEntityDTO>> GetAllTransmissions(int languageId);
 }
